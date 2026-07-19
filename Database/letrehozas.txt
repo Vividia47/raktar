@@ -1,0 +1,44 @@
+CREATE DATABASE warehouse DEFAULT CHARACTER SET utf8;
+
+CREATE TABLE goods(
+    idP int PRIMARY KEY AUTO_INCREMENT,
+    Article varchar(20),
+    Barcode varchar(13),
+    Name varchar(100),
+    VAT float,
+    LPPrice float,
+    SPrice float,
+    Stock float,
+    MinStock float,
+    Unit varchar(20),
+    Shelf varchar(20),
+    Bundle Float,
+    BUnit varchar(20)
+    )
+
+CREATE TABLE history(
+    idH int PRIMARY KEY AUTO_INCREMENT,
+    idP int,
+    idU int,
+    Date datetime,
+    InvoiceNr varchar(100),
+    Quantity float,
+    Direction int,
+    PPrice float,
+    SPrice float,
+    SerialNr varchar(50)
+    )
+
+CREATE TABLE users(
+    idU int PRIMARY KEY AUTO_INCREMENT,
+    UserName varchar(100),
+    FullName varchar(100),
+    Password varchar(30),
+    UserRank int
+    )
+
+Létrehozás után a history táblára állni, szerkezet nézet, az idP elé pipa majd index-re kattintani.
+users táblára állni, idU szintén index.
+
+Utána tervező -> kapcsolat létrehozása -> először goods id majd history idP összejelölése. Ezután users majd history kulcsok összekötése szintén
+
