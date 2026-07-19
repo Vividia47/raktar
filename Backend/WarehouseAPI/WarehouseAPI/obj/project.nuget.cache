@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "WoIsSyuKu5k=",
+  "success": true,
+  "projectFilePath": "D:\\Szoftverfejleszto\\Vizsga\\raktar\\Backend\\WarehouseAPI\\WarehouseAPI\\WarehouseAPI.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\zsolt\\.nuget\\packages\\microsoft.aspnetcore.openapi\\10.0.10\\microsoft.aspnetcore.openapi.10.0.10.nupkg.sha512",
+    "C:\\Users\\zsolt\\.nuget\\packages\\microsoft.openapi\\3.9.0\\microsoft.openapi.3.9.0.nupkg.sha512"
+  ],
+  "logs": []
+}
