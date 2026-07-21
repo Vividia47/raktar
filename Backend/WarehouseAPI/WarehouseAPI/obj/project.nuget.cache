@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "LX1CWYeMOVU=",
+  "dgSpecHash": "+A+6j/gk4EE=",
   "success": true,
   "projectFilePath": "D:\\Szoftverfejleszto\\Vizsga\\raktar\\Backend\\WarehouseAPI\\WarehouseAPI\\WarehouseAPI.csproj",
   "expectedPackageFiles": [
@@ -31,7 +31,7 @@
     "C:\\Users\\zsolt\\.nuget\\packages\\mysql.data\\9.7.0\\mysql.data.9.7.0.nupkg.sha512",
     "C:\\Users\\zsolt\\.nuget\\packages\\mysql.entityframeworkcore\\10.0.7\\mysql.entityframeworkcore.10.0.7.nupkg.sha512",
     "C:\\Users\\zsolt\\.nuget\\packages\\newtonsoft.json\\13.0.3\\newtonsoft.json.13.0.3.nupkg.sha512",
-    "C:\\Users\\zsolt\\.nuget\\packages\\scalar.aspnetcore\\2.16.15\\scalar.aspnetcore.2.16.15.nupkg.sha512",
+    "C:\\Users\\zsolt\\.nuget\\packages\\scalar.aspnetcore\\2.16.16\\scalar.aspnetcore.2.16.16.nupkg.sha512",
     "C:\\Users\\zsolt\\.nuget\\packages\\system.codedom\\6.0.0\\system.codedom.6.0.0.nupkg.sha512",
     "C:\\Users\\zsolt\\.nuget\\packages\\system.composition\\9.0.0\\system.composition.9.0.0.nupkg.sha512",
     "C:\\Users\\zsolt\\.nuget\\packages\\system.composition.attributedmodel\\9.0.0\\system.composition.attributedmodel.9.0.0.nupkg.sha512",

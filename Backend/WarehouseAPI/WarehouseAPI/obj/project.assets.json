@@ -654,7 +654,7 @@
           }
         }
       },
-      "Scalar.AspNetCore/2.16.15": {
+      "Scalar.AspNetCore/2.16.16": {
         "type": "package",
         "compile": {
           "lib/net10.0/Scalar.AspNetCore.dll": {
@@ -2375,10 +2375,10 @@
         "packageIcon.png"
       ]
     },
-    "Scalar.AspNetCore/2.16.15": {
-      "sha512": "gCwx1CmfNIY4jlz4KAsiZrnUnz9UP+PhnM/rNQV3xcl4bnCaFVNhEBNrTMY9mi1QnsAJ32GeXCYu6DkSR2MHrQ==",
+    "Scalar.AspNetCore/2.16.16": {
+      "sha512": "Ax0e0bIh+Upf92k1+pTBUom3e/kbpu20qsrDYmmS1NM721Eq2xF8c789x6IbiNrvW8WwySRzPv/icYYhb6idSg==",
       "type": "package",
-      "path": "scalar.aspnetcore/2.16.15",
+      "path": "scalar.aspnetcore/2.16.16",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -2390,7 +2390,7 @@
         "lib/net8.0/Scalar.AspNetCore.xml",
         "lib/net9.0/Scalar.AspNetCore.dll",
         "lib/net9.0/Scalar.AspNetCore.xml",
-        "scalar.aspnetcore.2.16.15.nupkg.sha512",
+        "scalar.aspnetcore.2.16.16.nupkg.sha512",
         "scalar.aspnetcore.nuspec"
       ]
     },
@@ -2731,7 +2731,7 @@
       "Microsoft.EntityFrameworkCore.Tools >= 10.0.10",
       "Microsoft.OpenApi >= 3.9.0",
       "MySql.EntityFrameworkCore >= 10.0.7",
-      "Scalar.AspNetCore >= 2.16.15"
+      "Scalar.AspNetCore >= 2.16.16"
     ]
   },
   "packageFolders": {
@@ -2816,7 +2816,7 @@
           },
           "Scalar.AspNetCore": {
             "target": "Package",
-            "version": "[2.16.15, )"
+            "version": "[2.16.16, )"
           }
         },
         "imports": [
