@@ -14,5 +14,68 @@
       }
     ],
     "ReturnTypes": []
+  },
+  {
+    "ContainingType": "WarehouseAPI.Controllers.GoodsController",
+    "Method": "GetAllGoods",
+    "RelativePath": "goods",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "WarehouseAPI.Controllers.GoodsController",
+    "Method": "UpdateGoods",
+    "RelativePath": "goods",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "updateGoodsDto",
+        "Type": "WarehouseAPI.Models.DTOs.UpdateGoodsDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "WarehouseAPI.Controllers.GoodsController",
+    "Method": "DeleteGoods",
+    "RelativePath": "goods",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "WarehouseAPI.Controllers.GoodsController",
+    "Method": "GetGoodsByID",
+    "RelativePath": "goods/byid",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
   }
 ]

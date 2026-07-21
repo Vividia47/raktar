@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using WarehouseAPI.Models;
 using WarehouseAPI.Models.DTOs;
 
@@ -43,6 +44,94 @@ namespace WarehouseAPI.Controllers
                 }
 
                 return StatusCode(404, new { message = "Sikertelen felvétel.", result = goods });
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(400, new { message = ex.Message });
+            }
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> GetAllGoods()
+        {
+            try
+            {
+                return Ok(new {message = "Sikeres lekérdezés", result = await _warehousecontext.Goods.ToListAsync()});
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(400, new { message = ex.Message });
+            }
+        }
+
+        [HttpGet("byid")]
+        public async Task<ActionResult> GetGoodsByID(int id)
+        {
+            try
+            {
+                var goods = await _warehousecontext.Goods.FindAsync(id);
+
+                if (goods != null)
+                {
+                    return Ok(new { message = "Sikeres lekérdezés", result = goods });
+                }
+                return StatusCode(404, new { message = "Sikertelen lekérdezés.", result = goods });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(400, new { message = ex.Message });
+            }
+        }
+
+        [HttpPut]
+        public async Task<ActionResult> UpdateGoods([FromQuery]int id, [FromBody] UpdateGoodsDto updateGoodsDto)
+        {
+            try
+            {
+                var goods = await _warehousecontext.Goods.FirstOrDefaultAsync(x => x.IdP == id); ;
+
+                if (goods  != null)
+                {
+                    goods.Article = updateGoodsDto.Article;
+                    goods.Barcode = updateGoodsDto.Barcode;
+                    goods.Name = updateGoodsDto.Name;
+                    goods.Vat = updateGoodsDto.Vat;
+                    goods.MinStock = updateGoodsDto.MinStock;
+                    goods.Unit = updateGoodsDto.Unit;
+                    goods.Shelf = updateGoodsDto.Shelf;
+                    goods.Bundle = updateGoodsDto.Bundle;
+                    goods.Bunit = updateGoodsDto.Bunit;
+
+                    _warehousecontext.Goods.Update(goods);
+                    await _warehousecontext.SaveChangesAsync();
+                    return Ok( new { message = "Sikeres frissítés.", result = goods });
+                }
+
+                return StatusCode(404, new { message = "Nincs találat.", result = goods });
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(400, new { message = ex.Message });
+            }
+        }
+
+        [HttpDelete]
+        public async Task<ActionResult> DeleteGoods(int id)
+        {
+            try
+            {
+                var goods = await _warehousecontext.Goods.FindAsync(id);
+
+                if (goods != null)
+                {
+                    _warehousecontext.Goods.Remove(goods);
+                    await _warehousecontext.SaveChangesAsync();
+                    return Ok(new { message = "Sikeres törlés.", result = goods });
+                }
+
+                return StatusCode(404, new { message = "Nincs találat.", result = goods });
 
             }
             catch (Exception ex)
