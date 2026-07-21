@@ -1,1 +1,18 @@
-[]
+[
+  {
+    "ContainingType": "WarehouseAPI.Controllers.GoodsController",
+    "Method": "AddNewGoods",
+    "RelativePath": "goods",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "addGoodsDto",
+        "Type": "WarehouseAPI.Models.DTOs.AddGoodsDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  }
+]

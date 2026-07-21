@@ -1,4 +1,5 @@
 using Scalar.AspNetCore;
+using WarehouseAPI.Models;
 
 namespace WarehouseAPI
 {
@@ -7,6 +8,8 @@ namespace WarehouseAPI
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+
+            builder.Services.AddDbContext<WarehouseContext>();
 
             // Add services to the container.
 
