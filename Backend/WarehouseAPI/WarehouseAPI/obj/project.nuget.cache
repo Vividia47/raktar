@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "+A+6j/gk4EE=",
+  "dgSpecHash": "LAR59qx6hOY=",
   "success": true,
   "projectFilePath": "D:\\Szoftverfejleszto\\Vizsga\\raktar\\Backend\\WarehouseAPI\\WarehouseAPI\\WarehouseAPI.csproj",
   "expectedPackageFiles": [
@@ -25,7 +25,7 @@
     "C:\\Users\\zsolt\\.nuget\\packages\\microsoft.entityframeworkcore.relational\\10.0.10\\microsoft.entityframeworkcore.relational.10.0.10.nupkg.sha512",
     "C:\\Users\\zsolt\\.nuget\\packages\\microsoft.entityframeworkcore.tools\\10.0.10\\microsoft.entityframeworkcore.tools.10.0.10.nupkg.sha512",
     "C:\\Users\\zsolt\\.nuget\\packages\\microsoft.extensions.dependencymodel\\10.0.10\\microsoft.extensions.dependencymodel.10.0.10.nupkg.sha512",
-    "C:\\Users\\zsolt\\.nuget\\packages\\microsoft.openapi\\3.9.0\\microsoft.openapi.3.9.0.nupkg.sha512",
+    "C:\\Users\\zsolt\\.nuget\\packages\\microsoft.openapi\\2.11.0\\microsoft.openapi.2.11.0.nupkg.sha512",
     "C:\\Users\\zsolt\\.nuget\\packages\\microsoft.visualstudio.solutionpersistence\\1.0.52\\microsoft.visualstudio.solutionpersistence.1.0.52.nupkg.sha512",
     "C:\\Users\\zsolt\\.nuget\\packages\\mono.texttemplating\\3.0.0\\mono.texttemplating.3.0.0.nupkg.sha512",
     "C:\\Users\\zsolt\\.nuget\\packages\\mysql.data\\9.7.0\\mysql.data.9.7.0.nupkg.sha512",
