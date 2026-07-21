@@ -19,7 +19,7 @@
     </PackageReference>
     <PackageReference Include="Microsoft.OpenApi" Version="3.9.0" />
     <PackageReference Include="MySql.EntityFrameworkCore" Version="10.0.7" />
-    <PackageReference Include="Scalar.AspNetCore" Version="2.16.15" />
+    <PackageReference Include="Scalar.AspNetCore" Version="2.16.16" />
   </ItemGroup>
 
 </Project>
