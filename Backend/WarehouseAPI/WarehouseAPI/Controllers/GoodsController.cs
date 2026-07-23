@@ -140,7 +140,7 @@ namespace WarehouseAPI.Controllers
             }
         }
 
-        [HttpGet("getAllGoodsHistory")]
+        [HttpGet("getAllGoodsHistory")]     // fejkarton + mozgások együtt
         public async Task<ActionResult> GetAllGoodsHistory(int id) 
         {
             try
@@ -159,5 +159,6 @@ namespace WarehouseAPI.Controllers
                 return StatusCode(400, new { message = ex.Message });
             }
         }
+
     }
 }

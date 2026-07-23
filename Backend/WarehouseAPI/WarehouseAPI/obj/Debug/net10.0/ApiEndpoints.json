@@ -121,6 +121,22 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "WarehouseAPI.Controllers.HistoryController",
+    "Method": "GetAllUserHistory",
+    "RelativePath": "history/getAllUserHistory",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "WarehouseAPI.Controllers.UserController",
     "Method": "AddNewUser",
     "RelativePath": "user",

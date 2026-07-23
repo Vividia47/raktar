@@ -126,5 +126,6 @@ namespace WarehouseAPI.Controllers
                 return StatusCode(400, new { message = ex.Message });
             }
         }
+
     }
 }

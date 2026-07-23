@@ -65,5 +65,24 @@ namespace WarehouseAPI.Controllers
             }
         }
 
+        [HttpGet("getAllUserHistory")]  // egy adott user által rögzített összes mozgás
+        public async Task<ActionResult> GetAllUserHistory(int id)
+        {
+            try
+            {
+                var userHistory = await _warehouseContext.Histories.Where(x => x.IdU == id).ToListAsync();
+
+                if (userHistory != null)
+                {
+                    return Ok(new { message = "Sikeres lekérdezés", result = userHistory });
+                }
+
+                return StatusCode(404, new { message = "Sikertelen lekérdezés", result = userHistory });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(400, new { message = ex.Message });
+            }
+        }
     }
 }
