@@ -10,8 +10,7 @@ public partial class WarehouseContext : DbContext
     {
     }
 
-    public WarehouseContext(DbContextOptions<WarehouseContext> options)
-        : base(options)
+    public WarehouseContext(DbContextOptions<WarehouseContext> options) : base(options)
     {
     }
 

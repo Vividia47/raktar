@@ -1,0 +1,4 @@
+Az első user felvitelekor nem kérhet jogosultsági szintet, hanem automatikusan "raktárvezető" besorolású legyen
+- először lekérdezni, van-e user
+- ha nincs, raktárvezető
+- ha van, megnézni, hogy a jelenleg bejelentkezett raktárvezető-e, és csak akkor lehet user kezelési joga
