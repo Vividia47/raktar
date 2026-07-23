@@ -139,5 +139,25 @@ namespace WarehouseAPI.Controllers
                 return StatusCode(400, new { message = ex.Message });
             }
         }
+
+        [HttpGet("getAllGoodsHistory")]
+        public async Task<ActionResult> GetAllGoodsHistory(int id) 
+        {
+            try
+            {
+                var goodsHistory = await _warehousecontext.Goods.Include(x => x.Histories).Where(x => x.IdP == id).ToListAsync();
+
+                if (goodsHistory != null)
+                {
+                    return Ok(new { message = "Sikeres lekérdezés", result = goodsHistory });
+                }
+
+                return StatusCode(404, new { message = "Sikertelen lekérdezés", result = goodsHistory });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(400, new { message = ex.Message });
+            }
+        }
     }
 }

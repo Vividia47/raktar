@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace WarehouseAPI.Models;
 
@@ -25,6 +26,7 @@ public partial class History
 
     public string? SerialNr { get; set; }
 
+    [JsonIgnore]
     public virtual Goods? IdPNavigation { get; set; }
 
     public virtual User? IdUNavigation { get; set; }
