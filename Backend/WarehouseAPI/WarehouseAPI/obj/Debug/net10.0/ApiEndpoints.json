@@ -79,6 +79,32 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "WarehouseAPI.Controllers.HistoryController",
+    "Method": "AddNewHistory",
+    "RelativePath": "history",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "addHistoryDto",
+        "Type": "WarehouseAPI.Models.DTOs.AddHistoryDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "WarehouseAPI.Controllers.HistoryController",
+    "Method": "GetAllHistory",
+    "RelativePath": "history",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "WarehouseAPI.Controllers.UserController",
     "Method": "AddNewUser",
     "RelativePath": "user",
