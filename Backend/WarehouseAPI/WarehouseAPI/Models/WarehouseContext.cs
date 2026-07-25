@@ -12,6 +12,7 @@ public partial class WarehouseContext : DbContext
 
     public WarehouseContext(DbContextOptions<WarehouseContext> options) : base(options)
     {
+        Database.EnsureCreated();  // legenerálja az adatbázist és a táblákat
     }
 
     public virtual DbSet<Goods> Goods { get; set; }
