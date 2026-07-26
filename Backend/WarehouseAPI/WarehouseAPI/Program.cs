@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
 using WarehouseAPI.Models;
 
@@ -9,7 +10,17 @@ namespace WarehouseAPI
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            builder.Services.AddDbContext<WarehouseContext>();
+            var conn = builder.Configuration.GetConnectionString("MySql");
+
+            builder.Services.AddDbContext<WarehouseContext>(
+                    options =>
+                    {
+                        if (conn != null)
+                        {
+                            options.UseMySQL(conn);
+                        }
+                    }
+                );
 
             // Add services to the container.
 
