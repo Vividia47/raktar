@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 using WarehouseAPI.Models;
 using WarehouseAPI.Models.DTOs;
 
@@ -153,6 +154,50 @@ namespace WarehouseAPI.Controllers
                 }
 
                 return StatusCode(404, new { message = "Sikertelen lekérdezés", result = goodsHistory });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(400, new { message = ex.Message });
+            }
+        }
+
+        [HttpPut("movement")]
+        public async Task<ActionResult> MovementGoods([FromQuery] int id, [FromBody] MovementGoodsDto movementGoodsDto)
+        {
+            try
+            {
+                var goods = await _warehousecontext.Goods.FirstOrDefaultAsync(x => x.IdP == id); ;
+
+                if (goods != null)
+                {
+                    int i = movementGoodsDto.Mcode;
+                    float lpp = movementGoodsDto.Lpprice;
+                    float r = movementGoodsDto.Stock;
+
+                    if (i > 200)
+                    {
+                        goods.Stock -= r;
+                    }
+                    else
+                    {
+                        goods.Stock += r;
+                    }
+
+                    if (i == 101 || i == 102)
+                    {
+                        if (lpp != 0)
+                        {
+                            goods.Lpprice = lpp;
+                        }
+                    }
+
+                    _warehousecontext.Goods.Update(goods);
+                    await _warehousecontext.SaveChangesAsync();
+                    return Ok(new { message = "Sikeres frissítés.", result = goods });
+                }
+
+                return StatusCode(404, new { message = "Nincs találat.", result = goods });
+
             }
             catch (Exception ex)
             {

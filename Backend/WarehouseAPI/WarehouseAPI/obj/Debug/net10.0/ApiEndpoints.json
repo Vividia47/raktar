@@ -95,6 +95,27 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "WarehouseAPI.Controllers.GoodsController",
+    "Method": "MovementGoods",
+    "RelativePath": "goods/movement",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "movementGoodsDto",
+        "Type": "WarehouseAPI.Models.DTOs.MovementGoodsDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "WarehouseAPI.Controllers.HistoryController",
     "Method": "AddNewHistory",
     "RelativePath": "history",

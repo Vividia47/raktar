@@ -28,9 +28,7 @@ public partial class WarehouseContext : DbContext
             entity.Property(e => e.IdP).HasColumnName("idP");
             entity.Property(e => e.Article).HasMaxLength(20);
             entity.Property(e => e.Barcode).HasMaxLength(13);
-            entity.Property(e => e.Bunit)
-                .HasMaxLength(20)
-                .HasColumnName("BUnit");
+            entity.Property(e => e.Bunit).HasMaxLength(20).HasColumnName("BUnit");
             entity.Property(e => e.Lpprice).HasColumnName("LPPrice");
             entity.Property(e => e.Name).HasMaxLength(100);
             entity.Property(e => e.Shelf).HasMaxLength(20);
