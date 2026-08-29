@@ -38,6 +38,12 @@ namespace WarehouseAPI.Controllers
 
                 if (goods != null)
                 {
+                    goods.MinStock = 0;
+                    goods.Stock = 0;
+                    goods.Lpprice = 0;
+                    goods.Sprice = 0;
+                    goods.Bundle = 0;
+
                     await _warehousecontext.Goods.AddAsync(goods);
                     await _warehousecontext.SaveChangesAsync();
 
@@ -99,6 +105,7 @@ namespace WarehouseAPI.Controllers
                     goods.Name = updateGoodsDto.Name;
                     goods.Vat = updateGoodsDto.Vat;
                     goods.MinStock = updateGoodsDto.MinStock;
+                    goods.Sprice = updateGoodsDto.Sprice;
                     goods.Unit = updateGoodsDto.Unit;
                     goods.Shelf = updateGoodsDto.Shelf;
                     goods.Bundle = updateGoodsDto.Bundle;
@@ -191,8 +198,25 @@ namespace WarehouseAPI.Controllers
                         }
                     }
 
+                    var history = new History
+                    {
+                        IdP = goods.IdP,
+                        IdU = movementGoodsDto.IdU,
+                        Date = DateTime.Now,
+                        InvoiceNr = movementGoodsDto.InvoiceNr,
+                        Quantity = r,
+                        Direction = i,
+                        Pprice = movementGoodsDto.Lpprice,
+                        Sprice = movementGoodsDto.Sprice,
+                        SerialNr = movementGoodsDto.SerialNr
+                    };
+
+                    await _warehousecontext.Histories.AddAsync(history);
+
                     _warehousecontext.Goods.Update(goods);
+
                     await _warehousecontext.SaveChangesAsync();
+                    
                     return Ok(new { message = "Sikeres frissítés.", result = goods });
                 }
 

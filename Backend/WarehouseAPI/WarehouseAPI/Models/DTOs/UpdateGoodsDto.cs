@@ -8,12 +8,13 @@ namespace WarehouseAPI.Models.DTOs
 
         public string? Barcode { get; set; }
 
-        [Required]
         public string? Name { get; set; }
 
         public float? Vat { get; set; }
 
         public float? MinStock { get; set; }
+
+        public float? Sprice { get; set; }
 
         public string? Unit { get; set; }
 

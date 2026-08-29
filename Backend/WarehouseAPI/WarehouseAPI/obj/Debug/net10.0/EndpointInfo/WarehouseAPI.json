@@ -617,6 +617,14 @@
       "MovementGoodsDto": {
         "type": "object",
         "properties": {
+          "idU": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
           "lpprice": {
             "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$",
             "type": [
@@ -641,6 +649,18 @@
             ],
             "format": "float"
           },
+          "invoiceNr": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "serialNr": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
           "mcode": {
             "pattern": "^-?(?:0|[1-9]\\d*)$",
             "type": [
@@ -652,9 +672,6 @@
         }
       },
       "UpdateGoodsDto": {
-        "required": [
-          "name"
-        ],
         "type": "object",
         "properties": {
           "article": {
@@ -685,6 +702,15 @@
             "format": "float"
           },
           "minStock": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$",
+            "type": [
+              "null",
+              "number",
+              "string"
+            ],
+            "format": "float"
+          },
+          "sprice": {
             "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$",
             "type": [
               "null",
