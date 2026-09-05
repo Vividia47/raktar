@@ -9,12 +9,12 @@ async function checkUsers() {
             registerSection.classList.remove("d-none");
             loginSection.classList.add("d-none");
 
-            console.log("No users - showing registration");
+            console.log("Nincs felhasználó - regisztrációs űrlap megjelenítése");
         } else {
             registerSection.classList.add("d-none");
             loginSection.classList.remove("d-none");
 
-            console.log("Users exist - showing login");
+            console.log("Felhasználók léteznek - bejelentkezési űrlap megjelenítése");
         }
 
     } catch (error) {
@@ -92,12 +92,27 @@ document.getElementById("login-form").addEventListener("submit", async function 
             return;
         }
 
-        alert(`Welcome, ${data.result.fullName}!`);
+        alert(`Üdvözöljük, ${data.result.fullName}!`);
 
-        console.log("Sikeres bejelentkezés:", data.result);
+document.getElementById("auth-section").classList.add("d-none");
+document.getElementById("dashboard-section").classList.remove("d-none");
+
+document.getElementById("welcome-message").textContent =
+    `Üdvözöljük, ${data.result.fullName}!`;
+
+console.log("Sikeres bejelentkezés:", data.result);
 
     } catch (error) {
         console.error(error);
         alert("Hiba történt a bejelentkezés során.");
     }
+});
+
+document.getElementById("logout-button").addEventListener("click", function () {
+    document.getElementById("dashboard-section").classList.add("d-none");
+    document.getElementById("auth-section").classList.remove("d-none");
+
+    document.getElementById("login-form").reset();
+
+    checkUsers();
 });
