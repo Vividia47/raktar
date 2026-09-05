@@ -33,6 +33,13 @@
     vertical-align: middle;
 }
 
+.mobile-card-table .text-end {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 0.35rem;
+}
+
 @media (max-width: 575.98px) {
     .page-header {
         align-items: stretch !important;
@@ -45,6 +52,47 @@
 
     .page-header-actions > .btn {
         flex: 1 1 auto;
+    }
+
+    #dashboard-section .container {
+        padding-bottom: 5.5rem !important;
+    }
+
+    #dashboard-section .page-header-actions {
+        position: fixed;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 1030;
+        display: flex;
+        width: 100%;
+        padding: 0.75rem 1rem;
+        background-color: #fff;
+        border-top: 1px solid #dee2e6;
+        box-shadow: 0 -0.25rem 0.75rem rgba(0, 0, 0, 0.08);
+    }
+
+    .inner-page > .container {
+        padding-bottom: 5.5rem !important;
+    }
+
+    .inner-page .back-page-actions {
+        position: fixed;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 1030;
+        display: flex;
+        width: 100%;
+        justify-content: flex-end;
+        padding: 0.75rem 1rem;
+        background-color: #fff;
+        border-top: 1px solid #dee2e6;
+        box-shadow: 0 -0.25rem 0.75rem rgba(0, 0, 0, 0.08);
+    }
+
+    .inner-page .back-page-actions > .btn {
+        flex: 0 0 auto;
     }
 
     .logout-button .logout-label {
