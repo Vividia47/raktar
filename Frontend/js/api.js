@@ -59,3 +59,17 @@ async function updateGoods(id, product) {
 
     return data.result;
 }
+
+async function deleteGoods(id) {
+    const response = await fetch(`${API_BASE_URL}/goods?id=${id}`, {
+        method: "DELETE"
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+        throw new Error(data.message || "Nem sikerült törölni a terméket.");
+    }
+
+    return data.result;
+}

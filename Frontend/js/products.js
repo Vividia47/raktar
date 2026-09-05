@@ -25,12 +25,18 @@ async function loadProducts() {
                 <td>${product.bundle ?? ""}</td>
                 <td>${product.bUnit ?? ""}</td>
                 <td>
-                    <button
-    class="btn btn-sm btn-outline-primary edit-product-button"
-    data-id="${product.idP}">
-    Szerkesztés
-</button>
-                </td>
+    <button
+        class="btn btn-sm btn-outline-primary edit-product-button"
+        data-id="${product.idP}">
+        Szerkesztés
+    </button>
+
+    <button
+        class="btn btn-sm btn-outline-danger delete-product-button"
+        data-id="${product.idP}">
+        Törlés
+    </button>
+</td>
             `;
 
             tableBody.appendChild(row);
@@ -158,4 +164,31 @@ document.getElementById("edit-product-form").addEventListener("submit", async fu
         console.error(error);
         alert(error.message);
     }
+});
+
+document.getElementById("products-table-body").addEventListener("click", async function (event) {
+
+    if (event.target.classList.contains("delete-product-button")) {
+
+        const productId = event.target.dataset.id;
+
+        const confirmed = confirm("Biztosan törölni szeretné ezt a terméket?");
+
+        if (!confirmed) {
+            return;
+        }
+
+        try {
+            await deleteGoods(productId);
+
+            alert("Sikeres törlés!");
+
+            await loadProducts();
+
+        } catch (error) {
+            console.error(error);
+            alert(error.message);
+        }
+    }
+
 });

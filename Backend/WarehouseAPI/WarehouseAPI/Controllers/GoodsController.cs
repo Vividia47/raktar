@@ -123,27 +123,46 @@ namespace WarehouseAPI.Controllers
         }
 
         [HttpDelete]
-        public async Task<ActionResult> DeleteGoods(int id)
+public async Task<ActionResult> DeleteGoods(int id)
+{
+    try
+    {
+        var goods = await _warehousecontext.Goods.FindAsync(id);
+
+        if (goods != null)
         {
-            try
+            if (goods.Stock != 0)
             {
-                var goods = await _warehousecontext.Goods.FindAsync(id);
-
-                if (goods != null)
+                return BadRequest(new
                 {
-                    _warehousecontext.Goods.Remove(goods);
-                    await _warehousecontext.SaveChangesAsync();
-                    return Ok(new { message = "Sikeres törlés.", result = goods });
-                }
-
-                return StatusCode(404, new { message = "Nincs találat.", result = goods });
-
+                    message = "A termék csak 0 készlet esetén törölhető."
+                });
             }
-            catch (Exception ex)
+
+            _warehousecontext.Goods.Remove(goods);
+            await _warehousecontext.SaveChangesAsync();
+
+            return Ok(new
             {
-                return StatusCode(400, new { message = ex.Message });
-            }
+                message = "Sikeres törlés.",
+                result = goods
+            });
         }
+
+        return StatusCode(404, new
+        {
+            message = "Nincs találat.",
+            result = goods
+        });
+    }
+    catch (Exception ex)
+    {
+        return StatusCode(400, new
+        {
+            message = ex.Message
+        });
+    }
+}
 
         [HttpGet("getAllGoodsHistory")]     // fejkarton + mozgások együtt
         public async Task<ActionResult> GetAllGoodsHistory(int id) 
