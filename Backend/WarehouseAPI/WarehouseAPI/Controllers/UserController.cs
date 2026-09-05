@@ -150,5 +150,57 @@ namespace WarehouseAPI.Controllers
             });
         }
 
+        [HttpPut("change-password")]
+public async Task<ActionResult> ChangePassword(
+    [FromQuery] int id,
+    [FromBody] ChangePasswordDto changePasswordDto)
+{
+    try
+    {
+        var user = await _warehouseContext.Users
+            .FirstOrDefaultAsync(x => x.IdU == id);
+
+        if (user == null)
+        {
+            return NotFound(new
+            {
+                message = "Nincs ilyen felhasználó."
+            });
+        }
+
+        if (user.Password != changePasswordDto.CurrentPassword)
+        {
+            return BadRequest(new
+            {
+                message = "A jelenlegi jelszó hibás."
+            });
+        }
+
+        if (changePasswordDto.NewPassword != changePasswordDto.ConfirmPassword)
+        {
+            return BadRequest(new
+            {
+                message = "Az új jelszavak nem egyeznek."
+            });
+        }
+
+        user.Password = changePasswordDto.NewPassword;
+
+        await _warehouseContext.SaveChangesAsync();
+
+        return Ok(new
+        {
+            message = "Sikeres jelszómódosítás."
+        });
+    }
+    catch (Exception ex)
+    {
+        return BadRequest(new
+        {
+            message = ex.Message
+        });
+    }
+}
+
     }
 }

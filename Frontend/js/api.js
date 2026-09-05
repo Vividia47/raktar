@@ -149,3 +149,21 @@ async function updateSellingPrice(id, sprice) {
 
     return data.result;
 }
+
+async function changePassword(id, passwordData) {
+    const response = await fetch(`${API_BASE_URL}/user/change-password?id=${id}`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(passwordData)
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+        throw new Error(data.message || "Nem sikerült módosítani a jelszót.");
+    }
+
+    return data;
+}

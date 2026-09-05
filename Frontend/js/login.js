@@ -171,3 +171,29 @@ document.getElementById("change-password-button").addEventListener("click", func
 
     modal.show();
 });
+
+document.getElementById("change-password-form").addEventListener("submit", async function (event) {
+    event.preventDefault();
+
+    const user = getLoggedInUser();
+
+    const passwordData = {
+        currentPassword: document.getElementById("current-password").value,
+        newPassword: document.getElementById("new-password").value,
+        confirmPassword: document.getElementById("confirm-password").value
+    };
+
+    try {
+        await changePassword(user.idU, passwordData);
+
+        alert("Sikeres jelszómódosítás! Kérjük, jelentkezzen be újra.");
+
+        localStorage.removeItem("loggedInUser");
+
+        window.location.href = "index.html";
+
+    } catch (error) {
+        console.error(error);
+        alert(error.message);
+    }
+});
