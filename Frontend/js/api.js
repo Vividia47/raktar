@@ -111,3 +111,41 @@ function requireLogin() {
         window.location.href = "index.html";
     }
 }
+
+function getLoggedInUser() {
+    const savedUser = localStorage.getItem("loggedInUser");
+
+    if (!savedUser) {
+        return null;
+    }
+
+    return JSON.parse(savedUser);
+}
+
+function hasRole(...allowedRanks) {
+    const user = getLoggedInUser();
+
+    if (!user) {
+        return false;
+    }
+
+    return allowedRanks.includes(user.userRank);
+}
+
+async function updateSellingPrice(id, sprice) {
+    const response = await fetch(`${API_BASE_URL}/goods/price?id=${id}`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(sprice)
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+        throw new Error(data.message || "Nem sikerült módosítani az eladási árat.");
+    }
+
+    return data.result;
+}

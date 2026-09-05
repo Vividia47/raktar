@@ -2,6 +2,12 @@ async function loadProducts() {
     try {
         const products = await getGoods();
 
+        const addProductButton = document.getElementById("add-product-button");
+
+if (addProductButton) {
+    addProductButton.style.display = hasRole(1, 2) ? "" : "none";
+}
+
         const tableBody = document.getElementById("products-table-body");
 
         tableBody.innerHTML = "";
@@ -9,6 +15,11 @@ async function loadProducts() {
         products.forEach(product => {
 
             const row = document.createElement("tr");
+
+const orderQuantity = Math.max(
+    (product.minStock ?? 0) - (product.stock ?? 0),
+    0
+);
 
             row.innerHTML = `
                 <td>${product.idP}</td>
@@ -20,22 +31,27 @@ async function loadProducts() {
                 <td>${product.sprice ?? ""}</td>
                 <td>${product.stock ?? ""}</td>
                 <td>${product.minStock ?? ""}</td>
-                <td>${product.unit ?? ""}</td>
+<td>${orderQuantity}</td>
+<td>${product.unit ?? ""}</td>
                 <td>${product.shelf ?? ""}</td>
                 <td>${product.bundle ?? ""}</td>
                 <td>${product.bunit ?? ""}</td>
                 <td>
+    ${hasRole(1, 2, 3) ? `
     <button
         class="btn btn-sm btn-outline-primary edit-product-button"
         data-id="${product.idP}">
         Szerkesztés
     </button>
+` : ""}
 
+${hasRole(1, 2) ? `
     <button
         class="btn btn-sm btn-outline-danger delete-product-button"
         data-id="${product.idP}">
         Törlés
     </button>
+` : ""}
 </td>
             `;
 
@@ -103,15 +119,37 @@ document.getElementById("products-table-body").addEventListener("click", async f
 
     const product = products.find(p => p.idP == productId);
 
-    document.getElementById("edit-product-article").value = product.article ?? "";
+document.getElementById("edit-product-article").value = product.article ?? "";
 document.getElementById("edit-product-barcode").value = product.barcode ?? "";
 document.getElementById("edit-product-name").value = product.name ?? "";
 document.getElementById("edit-product-vat").value = product.vat ?? "";
+document.getElementById("edit-product-sprice").value = product.sprice ?? "";
 document.getElementById("edit-product-min-stock").value = product.minStock ?? "";
 document.getElementById("edit-product-unit").value = product.unit ?? "";
 document.getElementById("edit-product-shelf").value = product.shelf ?? "";
 document.getElementById("edit-product-bundle").value = product.bundle ?? "";
 document.getElementById("edit-product-bunit").value = product.bunit ?? "";
+
+const user = getLoggedInUser();
+
+const editableFields = [
+    "edit-product-article",
+    "edit-product-barcode",
+    "edit-product-name",
+    "edit-product-vat",
+    "edit-product-sprice",
+    "edit-product-min-stock",
+    "edit-product-unit",
+    "edit-product-shelf",
+    "edit-product-bundle",
+    "edit-product-bunit"
+];
+
+editableFields.forEach(fieldId => {
+    document.getElementById(fieldId).disabled = user.userRank === 3;
+});
+
+document.getElementById("edit-product-sprice").disabled = false;
 
     console.log("Szerkesztendő termék:", product);
 
@@ -132,21 +170,33 @@ document.getElementById("edit-product-form").addEventListener("submit", async fu
     event.preventDefault();
 
     const productId = this.dataset.id;
-
-    const product = {
-        article: document.getElementById("edit-product-article").value,
-        barcode: document.getElementById("edit-product-barcode").value,
-        name: document.getElementById("edit-product-name").value,
-        vat: Number(document.getElementById("edit-product-vat").value),
-        minStock: Number(document.getElementById("edit-product-min-stock").value),
-        unit: document.getElementById("edit-product-unit").value,
-        shelf: document.getElementById("edit-product-shelf").value,
-        bundle: Number(document.getElementById("edit-product-bundle").value),
-        bunit: document.getElementById("edit-product-bunit").value
-    };
+    const user = getLoggedInUser();
 
     try {
-        await updateGoods(productId, product);
+        if (user.userRank === 3) {
+
+            const sprice = Number(
+                document.getElementById("edit-product-sprice").value
+            );
+
+            await updateSellingPrice(productId, sprice);
+
+        } else {
+
+            const product = {
+                article: document.getElementById("edit-product-article").value,
+                barcode: document.getElementById("edit-product-barcode").value,
+                name: document.getElementById("edit-product-name").value,
+                vat: Number(document.getElementById("edit-product-vat").value),
+                minStock: Number(document.getElementById("edit-product-min-stock").value),
+                unit: document.getElementById("edit-product-unit").value,
+                shelf: document.getElementById("edit-product-shelf").value,
+                bundle: Number(document.getElementById("edit-product-bundle").value),
+                bunit: document.getElementById("edit-product-bunit").value
+            };
+
+            await updateGoods(productId, product);
+        }
 
         alert("Sikeres módosítás!");
 

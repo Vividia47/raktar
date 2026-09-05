@@ -32,8 +32,17 @@ if (savedUser) {
     document.getElementById("auth-section").classList.add("d-none");
     document.getElementById("dashboard-section").classList.remove("d-none");
 
-    document.getElementById("welcome-message").textContent =
-        `Üdvözöljük, ${user.fullName}!`;
+    const userInfo = document.getElementById("user-info");
+
+const roles = {
+    1: "Raktárvezető",
+    2: "Raktáros",
+    3: "Kereskedő",
+    4: "Anyagbeszerző"
+};
+
+userInfo.textContent =
+    `Bejelentkezve: ${user.fullName} — ${roles[user.userRank]}`;
 }
 
 document.getElementById("register-form").addEventListener("submit", async function (event) {
@@ -104,13 +113,8 @@ document.getElementById("login-form").addEventListener("submit", async function 
             return;
         }
 
-        alert(`Üdvözöljük, ${data.result.fullName}!`);
-
 document.getElementById("auth-section").classList.add("d-none");
 document.getElementById("dashboard-section").classList.remove("d-none");
-
-document.getElementById("welcome-message").textContent =
-    `Üdvözöljük, ${data.result.fullName}!`;
 
 localStorage.setItem("loggedInUser", JSON.stringify(data.result));
 console.log("Bejelentkezett felhasználó:", data.result);
@@ -142,10 +146,28 @@ if (productsButton) {
     });
 }
 
-document.getElementById("stock-movements-button").addEventListener("click", function () {
-    window.location.href = "stock.html";
-});
+const stockMovementsCard = document.getElementById("stock-movements-card");
+
+if (stockMovementsCard) {
+    stockMovementsCard.style.display = hasRole(1, 2) ? "" : "none";
+}
+
+const stockMovementsButton = document.getElementById("stock-movements-button");
+
+if (stockMovementsButton) {
+    stockMovementsButton.addEventListener("click", function () {
+        window.location.href = "stock.html";
+    });
+}
 
 document.getElementById("history-button").addEventListener("click", function () {
     window.location.href = "history.html";
+});
+
+document.getElementById("change-password-button").addEventListener("click", function () {
+    const modal = new bootstrap.Modal(
+        document.getElementById("change-password-modal")
+    );
+
+    modal.show();
 });

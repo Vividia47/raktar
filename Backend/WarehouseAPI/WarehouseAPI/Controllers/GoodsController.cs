@@ -122,6 +122,45 @@ namespace WarehouseAPI.Controllers
             }
         }
 
+        [HttpPut("price")]
+public async Task<ActionResult> UpdateSellingPrice(
+    [FromQuery] int id,
+    [FromBody] float sprice)
+{
+    try
+    {
+        var goods = await _warehousecontext.Goods
+            .FirstOrDefaultAsync(x => x.IdP == id);
+
+        if (goods == null)
+        {
+            return StatusCode(404, new
+            {
+                message = "Nincs találat.",
+                result = goods
+            });
+        }
+
+        goods.Sprice = sprice;
+
+        _warehousecontext.Goods.Update(goods);
+        await _warehousecontext.SaveChangesAsync();
+
+        return Ok(new
+        {
+            message = "Sikeres árfrissítés.",
+            result = goods
+        });
+    }
+    catch (Exception ex)
+    {
+        return StatusCode(400, new
+        {
+            message = ex.Message
+        });
+    }
+}
+
         [HttpDelete]
 public async Task<ActionResult> DeleteGoods(int id)
 {
