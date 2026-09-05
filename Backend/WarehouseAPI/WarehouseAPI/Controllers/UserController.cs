@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WarehouseAPI.Models;
 using WarehouseAPI.Models.DTOs;
+using WarehouseAPI.DTOs;
 
 namespace WarehouseAPI.Controllers
 {
@@ -125,6 +126,28 @@ namespace WarehouseAPI.Controllers
             {
                 return StatusCode(400, new { message = ex.Message });
             }
+        }
+
+        [HttpPost("login")]
+        public IActionResult Login(LoginDto login)
+        {
+            var user = _warehouseContext.Users.FirstOrDefault(u =>
+                u.UserName == login.UserName &&
+                u.Password == login.Password);
+
+            if (user == null)
+            {
+                return Unauthorized(new
+                {
+                    message = "Hibás felhasználónév vagy jelszó."
+                });
+            }
+
+            return Ok(new
+            {
+                message = "Sikeres bejelentkezés.",
+                result = user
+            });
         }
 
     }

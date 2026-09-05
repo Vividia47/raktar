@@ -66,3 +66,38 @@ document.getElementById("register-form").addEventListener("submit", async functi
         alert("Hiba történt a fiók létrehozása során.");
     }
 });
+
+document.getElementById("login-form").addEventListener("submit", async function (event) {
+    event.preventDefault();
+
+    const username = document.getElementById("username").value;
+    const password = document.getElementById("password").value;
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/user/login`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                userName: username,
+                password: password
+            })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            alert(data.message || "Sikertelen bejelentkezés.");
+            return;
+        }
+
+        alert(`Welcome, ${data.result.fullName}!`);
+
+        console.log("Sikeres bejelentkezés:", data.result);
+
+    } catch (error) {
+        console.error(error);
+        alert("Hiba történt a bejelentkezés során.");
+    }
+});
