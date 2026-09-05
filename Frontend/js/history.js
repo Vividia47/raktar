@@ -16,7 +16,7 @@ try {
 } catch (error) {
 
     console.error(error);
-    alert(error.message);
+    showNotification(error.message, "danger");
 
 }
 
@@ -157,20 +157,24 @@ filteredHistory.forEach(record => {
     const row = document.createElement("tr");
 
     [
-        record.idH,
-        product ? product.name : record.idP,
-        user ? user.fullName : record.idU,
-        record.date
-            ? new Date(record.date).toLocaleString("hu-HU")
-            : "",
-        record.invoiceNr ?? "",
-        record.quantity ?? "",
-        getMovementName(record.direction),
-        record.pprice ?? "",
-        record.sprice ?? "",
-        record.serialNr ?? ""
-    ].forEach(value => {
+        ["ID", record.idH],
+        ["Termék", product ? product.name : record.idP],
+        ["Felhasználó", user ? user.fullName : record.idU],
+        [
+            "Dátum",
+            record.date
+                ? new Date(record.date).toLocaleString("hu-HU")
+                : ""
+        ],
+        ["Bizonylatszám", record.invoiceNr ?? ""],
+        ["Mennyiség", record.quantity ?? ""],
+        ["Mozgás típusa", getMovementName(record.direction)],
+        ["Beszerzési ár", record.pprice ?? ""],
+        ["Eladási ár", record.sprice ?? ""],
+        ["Sorozatszám", record.serialNr ?? ""]
+    ].forEach(([label, value]) => {
         const cell = document.createElement("td");
+        cell.dataset.label = label;
         cell.textContent = value;
         row.appendChild(cell);
     });
@@ -238,7 +242,7 @@ document.getElementById("back-button").addEventListener(
 "click",
 function () {
 
-    window.location.href = "index.html";
+    navigateBack();
 
 }
 

@@ -19,6 +19,7 @@ async function checkUsers() {
 
     } catch (error) {
         console.error(error);
+        showNotification("Nem sikerült ellenőrizni a felhasználókat.", "danger");
     }
 }
 
@@ -88,7 +89,7 @@ document.getElementById("register-form").addEventListener("submit", async functi
     const passwordConfirm = document.getElementById("register-password-confirm").value;
 
     if (password !== passwordConfirm) {
-        alert("A jelszavak nem egyeznek.");
+        showNotification("A jelszavak nem egyeznek.", "warning");
         return;
     }
 
@@ -110,7 +111,7 @@ document.getElementById("register-form").addEventListener("submit", async functi
             throw new Error("Felhasználó létrehozása sikertelen.");
         }
 
-        alert("Raktárvezetői fiók sikeresen létrehozva.");
+        showNotification("Raktárvezetői fiók sikeresen létrehozva.", "success");
 
         document.getElementById("register-form").reset();
 
@@ -118,7 +119,7 @@ document.getElementById("register-form").addEventListener("submit", async functi
 
     } catch (error) {
         console.error(error);
-        alert("Hiba történt a fiók létrehozása során.");
+        showNotification("Hiba történt a fiók létrehozása során.", "danger");
     }
 });
 
@@ -143,7 +144,7 @@ document.getElementById("login-form").addEventListener("submit", async function 
         const data = await response.json();
 
         if (!response.ok) {
-            alert(data.message || "Sikertelen bejelentkezés.");
+            showNotification(data.message || "Sikertelen bejelentkezés.", "danger");
             return;
         }
 
@@ -156,7 +157,7 @@ updateDashboard();
 
     } catch (error) {
         console.error(error);
-        alert("Hiba történt a bejelentkezés során.");
+        showNotification("Hiba történt a bejelentkezés során.", "danger");
     }
 });
 
@@ -215,7 +216,7 @@ document.getElementById("change-password-form").addEventListener("submit", async
     try {
         await changePassword(user.idU, passwordData);
 
-        alert("Sikeres jelszómódosítás! Kérjük, jelentkezzen be újra.");
+        showNotification("Sikeres jelszómódosítás! Kérjük, jelentkezzen be újra.", "success");
 
         localStorage.removeItem("loggedInUser");
 
@@ -223,6 +224,6 @@ document.getElementById("change-password-form").addEventListener("submit", async
 
     } catch (error) {
         console.error(error);
-        alert(error.message);
+        showNotification(error.message, "danger");
     }
 });

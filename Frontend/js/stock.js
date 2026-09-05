@@ -15,7 +15,7 @@ async function loadMovementProducts() {
 
     } catch (error) {
         console.error(error);
-        alert("Nem sikerült betölteni a termékeket.");
+        showNotification("Nem sikerült betölteni a termékeket.", "danger");
     }
 }
 
@@ -30,7 +30,7 @@ document.getElementById("movement-form").addEventListener("submit", async functi
     const savedUser = localStorage.getItem("loggedInUser");
 
     if (!savedUser) {
-        alert("Nincs bejelentkezett felhasználó.");
+        showNotification("Nincs bejelentkezett felhasználó.", "warning");
         return;
     }
 
@@ -49,16 +49,16 @@ document.getElementById("movement-form").addEventListener("submit", async functi
     try {
         await movementGoods(productId, movement);
 
-        alert("Sikeres készletmozgás!");
+        showNotification("Sikeres készletmozgás!", "success");
 
         document.getElementById("movement-form").reset();
 
     } catch (error) {
         console.error(error);
-        alert(error.message);
+        showNotification(error.message, "danger");
     }
 });
 
 document.getElementById("back-button").addEventListener("click", function () {
-    window.location.href = "index.html";
+    navigateBack();
 });

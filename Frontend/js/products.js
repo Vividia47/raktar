@@ -14,6 +14,7 @@ async function loadProducts() {
 
     } catch (error) {
         console.error(error);
+        showNotification("Nem sikerült betölteni a termékeket.", "danger");
     }
 }
 
@@ -145,33 +146,35 @@ function displayProducts() {
 
 
         [
-            product.idP,
-            product.article ?? "",
-            product.barcode ?? "",
-            product.name ?? "",
-            product.vat ?? "",
-            product.lpprice ?? "",
-            product.sprice ?? "",
-            product.stock ?? "",
-            product.minStock ?? "",
-            orderQuantity,
-            product.unit ?? "",
-            product.shelf ?? "",
-            product.bundle ?? "",
-            product.bunit ?? ""
-        ].forEach(value => {
+            ["ID", product.idP],
+            ["Cikkszám", product.article ?? ""],
+            ["Vonalkód", product.barcode ?? ""],
+            ["Megnevezés", product.name ?? ""],
+            ["ÁFA", product.vat ?? ""],
+            ["Beszerzési ár", product.lpprice ?? ""],
+            ["Eladási ár", product.sprice ?? ""],
+            ["Készlet", product.stock ?? ""],
+            ["Min. készlet", product.minStock ?? ""],
+            ["Rendelendő mennyiség", orderQuantity],
+            ["Egység", product.unit ?? ""],
+            ["Polc", product.shelf ?? ""],
+            ["Gyűjtő", product.bundle ?? ""],
+            ["Gyűjtő egység", product.bunit ?? ""]
+        ].forEach(([label, value]) => {
             const cell = document.createElement("td");
+            cell.dataset.label = label;
             cell.textContent = value;
             row.appendChild(cell);
         });
 
         const actionsCell = document.createElement("td");
+        actionsCell.dataset.label = "Műveletek";
         actionsCell.classList.add("text-end");
 
         if (hasRole(1, 2, 3)) {
             const editButton = document.createElement("button");
             editButton.type = "button";
-            editButton.className = "btn btn-sm btn-outline-primary edit-product-button";
+            editButton.className = "btn btn-sm btn-primary edit-product-button";
             editButton.dataset.id = product.idP;
             editButton.textContent = "Szerkesztés";
             actionsCell.appendChild(editButton);
@@ -180,7 +183,7 @@ function displayProducts() {
         if (hasRole(1, 2)) {
             const deleteButton = document.createElement("button");
             deleteButton.type = "button";
-            deleteButton.className = "btn btn-sm btn-outline-danger delete-product-button";
+            deleteButton.className = "btn btn-sm btn-danger delete-product-button";
             deleteButton.dataset.id = product.idP;
             deleteButton.textContent = "Törlés";
             actionsCell.appendChild(deleteButton);
@@ -231,7 +234,7 @@ document
     .getElementById("back-button")
     .addEventListener("click", function () {
 
-        window.location.href = "index.html";
+        navigateBack();
 
     });
 
@@ -285,7 +288,7 @@ document
             await addGoods(product, user.idU);
 
 
-            alert("Sikeres termékfelvétel!");
+            showNotification("Sikeres termékfelvétel!", "success");
 
 
             document
@@ -314,7 +317,7 @@ document
 
             console.error(error);
 
-            alert(error.message);
+            showNotification(error.message, "danger");
 
         }
 
@@ -478,7 +481,7 @@ document
                 );
 
 
-                alert("Sikeres törlés!");
+                showNotification("Sikeres törlés!", "success");
 
 
                 await loadProducts();
@@ -489,7 +492,7 @@ document
 
                 console.error(error);
 
-                alert(error.message);
+                showNotification(error.message, "danger");
 
             }
 
@@ -648,7 +651,7 @@ document
 
 
 
-            alert("Sikeres módosítás!");
+            showNotification("Sikeres módosítás!", "success");
 
 
 
@@ -677,7 +680,7 @@ document
             console.error(error);
 
 
-            alert(error.message);
+            showNotification(error.message, "danger");
 
 
         }

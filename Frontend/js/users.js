@@ -20,7 +20,7 @@ async function loadUsers() {
 
         console.error(error);
 
-        alert("Nem sikerült betölteni a felhasználókat.");
+        showNotification("Nem sikerült betölteni a felhasználókat.", "danger");
 
     }
 }
@@ -43,7 +43,7 @@ document.getElementById("save-edit-user-button").addEventListener("click", async
 
         await updateUser(userId, user);
 
-        alert("A felhasználó sikeresen frissítve.");
+        showNotification("A felhasználó sikeresen frissítve.", "success");
 
         const modal = bootstrap.Modal.getInstance(
             document.getElementById("edit-user-modal")
@@ -56,7 +56,7 @@ document.getElementById("save-edit-user-button").addEventListener("click", async
     } catch (error) {
 
         console.error(error);
-        alert(error.message);
+        showNotification(error.message, "danger");
     }
 });
 
@@ -84,12 +84,12 @@ document.getElementById("save-user-password-button").addEventListener("click", a
     const confirmPassword = document.getElementById("change-user-password-confirm").value;
 
     if (!newPassword) {
-        alert("Kérjük, adjon meg egy új jelszót.");
+        showNotification("Kérjük, adjon meg egy új jelszót.", "warning");
         return;
     }
 
     if (newPassword !== confirmPassword) {
-        alert("A két jelszó nem egyezik.");
+        showNotification("A két jelszó nem egyezik.", "warning");
         return;
     }
 
@@ -106,7 +106,7 @@ document.getElementById("save-user-password-button").addEventListener("click", a
             }
         );
 
-        alert("A jelszó sikeresen módosítva.");
+        showNotification("A jelszó sikeresen módosítva.", "success");
 
         const modal = bootstrap.Modal.getInstance(
             document.getElementById("change-user-password-modal")
@@ -117,7 +117,7 @@ document.getElementById("save-user-password-button").addEventListener("click", a
     } catch (error) {
 
         console.error(error);
-        alert(error.message);
+        showNotification(error.message, "danger");
     }
 });
 
@@ -162,6 +162,7 @@ document.getElementById("users-table-body").addEventListener("click", function (
 function displayUsers() {
 
     const tableBody = document.getElementById("users-table-body");
+    const resultCount = document.getElementById("user-result-count");
 
     const search = document
         .getElementById("user-search")
@@ -189,6 +190,8 @@ function displayUsers() {
         return matchesSearch && matchesRole;
 
     });
+
+    resultCount.textContent = `${filteredUsers.length} találat`;
 
 
     tableBody.innerHTML = "";
@@ -280,7 +283,7 @@ document.getElementById("save-user-button").addEventListener("click", async func
 
         await addUser(user);
 
-        alert("A felhasználó sikeresen létrejött.");
+        showNotification("A felhasználó sikeresen létrejött.", "success");
 
         const modal = bootstrap.Modal.getInstance(
             document.getElementById("add-user-modal")
@@ -293,7 +296,7 @@ document.getElementById("save-user-button").addEventListener("click", async func
     } catch (error) {
 
         console.error(error);
-        alert("Nem sikerült létrehozni a felhasználót.");
+        showNotification("Nem sikerült létrehozni a felhasználót.", "danger");
     }
 });
 
@@ -319,19 +322,25 @@ document.getElementById("users-table-body").addEventListener("click", async func
 
         await deleteUser(userId, currentUser.idU);
 
-        alert("A felhasználó sikeresen törölve.");
+        showNotification("A felhasználó sikeresen törölve.", "success");
 
         loadUsers();
 
     } catch (error) {
 
         console.error(error);
-        alert(error.message);
+        showNotification(error.message, "danger");
     }
 });
 
 document.getElementById("back-button").addEventListener("click", function () {
-    window.location.href = "index.html";
+    navigateBack();
+});
+
+document.getElementById("user-clear-filters").addEventListener("click", function () {
+    document.getElementById("user-search").value = "";
+    document.getElementById("user-role-filter").value = "";
+    displayUsers();
 });
 
 document.getElementById("user-search").addEventListener(

@@ -6,6 +6,22 @@
     flex-shrink: 0;
 }
 
+.notification-container {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    z-index: 1080;
+    width: min(24rem, calc(100vw - 2rem));
+}
+
+.notification-container .alert {
+    margin-bottom: 0.75rem;
+}
+
+.mobile-card-table td {
+    vertical-align: middle;
+}
+
 @media (max-width: 575.98px) {
     .page-header {
         align-items: stretch !important;
@@ -18,6 +34,99 @@
 
     .page-header-actions > .btn {
         flex: 1 1 auto;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .mobile-card-table {
+        border-collapse: separate;
+        border-spacing: 0 0.75rem;
+        margin-top: -0.75rem;
+    }
+
+    .mobile-card-table thead {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+    }
+
+    .mobile-card-table tbody,
+    .mobile-card-table tr,
+    .mobile-card-table td {
+        display: block;
+        width: 100%;
+    }
+
+    .mobile-card-table tr {
+        padding: 0.75rem 1rem;
+        background: #fff;
+        border: 1px solid #dee2e6;
+        border-radius: 0.5rem;
+        box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    }
+
+    .mobile-card-table td {
+        display: flex;
+        justify-content: space-between;
+        gap: 1rem;
+        padding: 0.4rem 0;
+        border: 0;
+        text-align: right !important;
+    }
+
+    .mobile-card-table td::before {
+        flex: 0 0 auto;
+        color: #6c757d;
+        content: attr(data-label);
+        font-weight: 600;
+        text-align: left;
+    }
+
+    .mobile-card-table .text-center {
+        display: block;
+        text-align: center !important;
+    }
+
+    .mobile-card-table .text-center::before {
+        content: none;
+    }
+
+    .mobile-card-table .text-end {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+        gap: 0.5rem;
+        margin-top: 0.5rem;
+        padding-top: 0.75rem;
+        border-top: 1px solid #e9ecef;
+        text-align: left !important;
+    }
+
+    .mobile-card-table .text-end::before {
+        flex-basis: 100%;
+    }
+
+    .product-table td:nth-child(1),
+    .product-table td:nth-child(5),
+    .product-table td:nth-child(6),
+    .product-table td:nth-child(9),
+    .product-table td:nth-child(11),
+    .product-table td:nth-child(12),
+    .product-table td:nth-child(13),
+    .product-table td:nth-child(14) {
+        display: none;
+    }
+
+    .history-table td:nth-child(1),
+    .history-table td:nth-child(8),
+    .history-table td:nth-child(9) {
+        display: none;
     }
 }
 

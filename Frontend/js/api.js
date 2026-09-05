@@ -273,3 +273,45 @@ async function changePassword(id, passwordData) {
 
     return data;
 }
+
+function showNotification(message, type = "info") {
+    let container = document.getElementById("notification-container");
+
+    if (!container) {
+        container = document.createElement("div");
+        container.id = "notification-container";
+        container.className = "notification-container";
+        container.setAttribute("aria-live", "polite");
+        container.setAttribute("aria-atomic", "true");
+        document.body.appendChild(container);
+    }
+
+    const notification = document.createElement("div");
+    notification.className = `alert alert-${type} alert-dismissible fade show shadow-sm`;
+    notification.setAttribute("role", type === "danger" ? "alert" : "status");
+    notification.textContent = message;
+
+    const closeButton = document.createElement("button");
+    closeButton.type = "button";
+    closeButton.className = "btn-close";
+    closeButton.setAttribute("aria-label", "Bezárás");
+    closeButton.addEventListener("click", () => notification.remove());
+
+    notification.appendChild(closeButton);
+    container.appendChild(notification);
+
+    window.setTimeout(() => notification.remove(), 5000);
+}
+
+function navigateBack() {
+    const hasSameOriginReferrer =
+        document.referrer &&
+        new URL(document.referrer).origin === window.location.origin;
+
+    if (hasSameOriginReferrer && window.history.length > 1) {
+        window.history.back();
+        return;
+    }
+
+    window.location.href = "index.html";
+}
