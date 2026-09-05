@@ -26,6 +26,85 @@ async function usersExist() {
     return data.result;
 }
 
+async function addUser(user) {
+    const response = await fetch(`${API_BASE_URL}/user`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(user)
+    });
+
+    if (!response.ok) {
+        throw new Error("Nem sikerült létrehozni a felhasználót.");
+    }
+
+    return await response.json();
+}
+
+async function updateUser(id, user) {
+    const response = await fetch(
+        `${API_BASE_URL}/user?id=${id}`,
+        {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(user)
+        }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+        throw new Error(data.message || "Nem sikerült frissíteni a felhasználót.");
+    }
+
+    return data;
+}
+
+async function deleteUser(id, userId) {
+    const response = await fetch(
+        `${API_BASE_URL}/user?id=${id}&userId=${userId}`,
+        {
+            method: "DELETE"
+        }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+        throw new Error(
+            data.message || "Nem sikerült törölni a felhasználót."
+        );
+    }
+
+    return data;
+}
+
+async function changeUserPassword(id, userId, passwordData) {
+    const response = await fetch(
+        `${API_BASE_URL}/user/change-password-manager?id=${id}&userId=${userId}`,
+        {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(passwordData)
+        }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+        throw new Error(
+            data.message || "Nem sikerült módosítani a jelszót."
+        );
+    }
+
+    return data;
+}
+
 async function getGoods() {
     const response = await fetch(`${API_BASE_URL}/goods`);
 

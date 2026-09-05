@@ -118,52 +118,127 @@ public async Task<ActionResult> UsersExist()
         }
 
         [HttpPut]
-        public async Task<ActionResult> UpdateUser([FromQuery] int id, [FromBody] UpdateUserDto updateUserDto)
+public async Task<ActionResult> UpdateUser(
+    [FromQuery] int id,
+    [FromBody] UpdateUserDto updateUserDto)
+{
+    try
+    {
+        var user = await _warehouseContext.Users
+            .FirstOrDefaultAsync(x => x.IdU == id);
+
+        if (user != null)
         {
-            try
+            if (user.UserRank == 1 && updateUserDto.UserRank != 1)
+{
+    var managerCount = await _warehouseContext.Users
+        .CountAsync(x => x.UserRank == 1);
+
+    if (managerCount <= 1)
+    {
+        return BadRequest(new
+        {
+            message = "A rendszerben legalább egy Raktárvezetőnek kell lennie."
+        });
+    }
+}
+
+            user.UserName = updateUserDto.UserName;
+            user.FullName = updateUserDto.FullName;
+            user.UserRank = updateUserDto.UserRank;
+
+            _warehouseContext.Users.Update(user);
+
+            await _warehouseContext.SaveChangesAsync();
+
+            return Ok(new
             {
-                var user = await _warehouseContext.Users.FirstOrDefaultAsync(x => x.IdU == id); ;
-
-                if (user != null)
-                {
-                    user.Password = updateUserDto.Password;
-
-                    _warehouseContext.Users.Update(user);
-                    await _warehouseContext.SaveChangesAsync();
-                    return Ok(new { message = "Sikeres frissítés.", result = user });
-                }
-
-                return StatusCode(404, new { message = "Nincs találat.", result = user });
-
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(400, new { message = ex.Message });
-            }
+                message = "Sikeres frissítés.",
+                result = user
+            });
         }
 
+        return StatusCode(404, new
+        {
+            message = "Nincs találat."
+        });
+    }
+    catch (Exception ex)
+    {
+        return StatusCode(400, new
+        {
+            message = ex.Message
+        });
+    }
+}
         [HttpDelete]
-        public async Task<ActionResult> DeleteUser(int id)
+public async Task<ActionResult> DeleteUser(
+    [FromQuery] int id,
+    [FromQuery] int userId)
+{
+    try
+    {
+        var currentUser = await _warehouseContext.Users
+            .FirstOrDefaultAsync(x => x.IdU == userId);
+
+        if (currentUser == null)
         {
-            try
+            return NotFound(new
             {
-                var user = await _warehouseContext.Users.FindAsync(id);
+                message = "Nincs ilyen felhasználó."
+            });
+        }
+                if (currentUser.UserRank != 1)
+        {
+            return StatusCode(403, new
+            {
+                message = "Nincs jogosultsága felhasználó törléséhez."
+            });
+        }
 
-                if (user != null)
+        var user = await _warehouseContext.Users
+            .FirstOrDefaultAsync(x => x.IdU == id);
+
+        if (user == null)
+        {
+            return NotFound(new
+            {
+                message = "Nincs találat."
+            });
+        }
+
+        if (user.UserRank == 1)
+        {
+            var managerCount = await _warehouseContext.Users
+                .CountAsync(x => x.UserRank == 1);
+
+            if (managerCount <= 1)
+            {
+                return BadRequest(new
                 {
-                    _warehouseContext.Users.Remove(user);
-                    await _warehouseContext.SaveChangesAsync();
-                    return Ok(new { message = "Sikeres törlés.", result = user });
-                }
-
-                return StatusCode(404, new { message = "Nincs találat.", result = user });
-
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(400, new { message = ex.Message });
+                    message = "A rendszerben legalább egy Raktárvezetőnek kell lennie."
+                });
             }
         }
+
+        _warehouseContext.Users.Remove(user);
+
+        await _warehouseContext.SaveChangesAsync();
+
+        return Ok(new
+        {
+            message = "Sikeres törlés.",
+            result = user
+        });
+    }
+    catch (Exception ex)
+    {
+        return StatusCode(400, new
+        {
+            message = ex.Message
+        });
+    }
+}
 
         [HttpPost("login")]
         public IActionResult Login(LoginDto login)
@@ -239,5 +314,72 @@ public async Task<ActionResult> ChangePassword(
     }
 }
 
+[HttpPut("change-password-manager")]
+public async Task<ActionResult> ChangeUserPassword(
+    [FromQuery] int id,
+    [FromQuery] int userId,
+    [FromBody] ChangePasswordDto changePasswordDto)
+{
+    try
+    {
+        var currentUser = await _warehouseContext.Users
+            .FirstOrDefaultAsync(x => x.IdU == userId);
+
+        if (currentUser == null)
+        {
+            return NotFound(new
+            {
+                message = "Nincs ilyen felhasználó."
+            });
+        }
+
+        if (currentUser.UserRank != 1)
+        {
+            return StatusCode(403, new
+            {
+                message = "Nincs jogosultsága másik felhasználó jelszavának módosításához."
+            });
+        }
+        var user = await _warehouseContext.Users
+            .FirstOrDefaultAsync(x => x.IdU == id);
+
+        if (user == null)
+        {
+            return NotFound(new
+            {
+                message = "Nincs ilyen felhasználó."
+            });
+        }
+
+        if (changePasswordDto.NewPassword != changePasswordDto.ConfirmPassword)
+        {
+            return BadRequest(new
+            {
+                message = "A két jelszó nem egyezik."
+            });
+        }
+
+        user.Password = changePasswordDto.NewPassword;
+
+        _warehouseContext.Users.Update(user);
+
+        await _warehouseContext.SaveChangesAsync();
+
+        return Ok(new
+        {
+            message = "A jelszó sikeresen módosítva."
+        });
+    }
+    catch (Exception ex)
+    {
+        return StatusCode(400, new
+        {
+            message = ex.Message
+        });
     }
 }
+
+    }
+}
+
+

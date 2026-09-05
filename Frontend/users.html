@@ -50,10 +50,12 @@
                 </h2>
 
                 <button
-                    id="add-user-button"
-                    class="btn btn-primary">
-                    + Új felhasználó
-                </button>
+    id="add-user-button"
+    class="btn btn-primary"
+    data-bs-toggle="modal"
+    data-bs-target="#add-user-modal">
+    + Új felhasználó
+</button>
 
             </div>
 
@@ -83,6 +85,233 @@
 
     </div>
 
+</div>
+
+<div class="modal fade" id="add-user-modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Új felhasználó</h5>
+
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Bezárás">
+                </button>
+            </div>
+
+            <div class="modal-body">
+
+                <div class="mb-3">
+                    <label for="add-user-name" class="form-label">
+                        Felhasználónév
+                    </label>
+
+                    <input
+                        type="text"
+                        id="add-user-name"
+                        class="form-control">
+                </div>
+
+                <div class="mb-3">
+                    <label for="add-user-full-name" class="form-label">
+                        Teljes név
+                    </label>
+
+                    <input
+                        type="text"
+                        id="add-user-full-name"
+                        class="form-control">
+                </div>
+
+                <div class="mb-3">
+                    <label for="add-user-password" class="form-label">
+                        Jelszó
+                    </label>
+
+                    <input
+                        type="password"
+                        id="add-user-password"
+                        class="form-control">
+                </div>
+
+                <div class="mb-3">
+                    <label for="add-user-rank" class="form-label">
+                        Szerepkör
+                    </label>
+
+                    <select id="add-user-rank" class="form-select">
+                        <option value="1">Raktárvezető</option>
+                        <option value="2">Raktáros</option>
+                        <option value="3">Kereskedő</option>
+                        <option value="4">Anyagbeszerző</option>
+                    </select>
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+
+                <button
+                    type="button"
+                    class="btn btn-secondary"
+                    data-bs-dismiss="modal">
+                    Mégse
+                </button>
+
+                <button
+                    type="button"
+                    id="save-user-button"
+                    class="btn btn-primary">
+                    Mentés
+                </button>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="edit-user-modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Felhasználó szerkesztése</h5>
+
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Bezárás">
+                </button>
+            </div>
+
+            <div class="modal-body">
+
+                <div class="mb-3">
+                    <label for="edit-user-name" class="form-label">
+                        Felhasználónév
+                    </label>
+
+                    <input
+                        type="text"
+                        id="edit-user-name"
+                        class="form-control">
+                </div>
+
+                <div class="mb-3">
+                    <label for="edit-user-full-name" class="form-label">
+                        Teljes név
+                    </label>
+
+                    <input
+                        type="text"
+                        id="edit-user-full-name"
+                        class="form-control">
+                </div>
+
+                <div class="mb-3">
+                    <label for="edit-user-rank" class="form-label">
+                        Szerepkör
+                    </label>
+
+                    <select id="edit-user-rank" class="form-select">
+                        <option value="1">Raktárvezető</option>
+                        <option value="2">Raktáros</option>
+                        <option value="3">Kereskedő</option>
+                        <option value="4">Anyagbeszerző</option>
+                    </select>
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+
+                <button
+                    type="button"
+                    class="btn btn-secondary"
+                    data-bs-dismiss="modal">
+                    Mégse
+                </button>
+
+                <button
+                    type="button"
+                    id="save-edit-user-button"
+                    class="btn btn-primary">
+                    Mentés
+                </button>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- Jelszó módosítása modal -->
+<div class="modal fade" id="change-user-password-modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Jelszó módosítása</h5>
+
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Bezárás">
+                </button>
+            </div>
+
+            <div class="modal-body">
+
+                <div class="mb-3">
+                    <label for="change-user-password" class="form-label">
+                        Új jelszó
+                    </label>
+
+                    <input
+                        type="password"
+                        id="change-user-password"
+                        class="form-control">
+                </div>
+
+                <div class="mb-3">
+                    <label for="change-user-password-confirm" class="form-label">
+                        Új jelszó ismét
+                    </label>
+
+                    <input
+                        type="password"
+                        id="change-user-password-confirm"
+                        class="form-control">
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+
+                <button
+                    type="button"
+                    class="btn btn-secondary"
+                    data-bs-dismiss="modal">
+                    Mégse
+                </button>
+
+                <button
+                    type="button"
+                    id="save-user-password-button"
+                    class="btn btn-primary">
+                    Mentés
+                </button>
+
+            </div>
+
+        </div>
+    </div>
 </div>
 
 <script
