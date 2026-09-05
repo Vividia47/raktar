@@ -91,3 +91,23 @@ async function movementGoods(id, movement) {
 
     return data.result;
 }
+
+async function getHistory() {
+    const response = await fetch(`${API_BASE_URL}/history`);
+
+    if (!response.ok) {
+        throw new Error("Nem sikerült lekérni a készletmozgásokat.");
+    }
+
+    const data = await response.json();
+
+    return data.result;
+}
+
+function requireLogin() {
+    const savedUser = localStorage.getItem("loggedInUser");
+
+    if (!savedUser) {
+        window.location.href = "index.html";
+    }
+}
