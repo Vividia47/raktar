@@ -221,39 +221,33 @@ function displayUsers() {
         }
 
 
-        row.innerHTML = `
+        [
+            user.idU,
+            user.userName,
+            user.fullName,
+            getRoleName(user.userRank)
+        ].forEach(value => {
+            const cell = document.createElement("td");
+            cell.textContent = value ?? "";
+            row.appendChild(cell);
+        });
 
-            <td>${user.idU}</td>
+        const actionsCell = document.createElement("td");
 
-            <td>${user.userName}</td>
+        [
+            ["btn btn-sm btn-primary edit-user-button", "Szerkesztés"],
+            ["btn btn-sm btn-secondary change-password-button", "Jelszó"],
+            ["btn btn-sm btn-danger delete-user-button", "Törlés"]
+        ].forEach(([className, label]) => {
+            const button = document.createElement("button");
+            button.type = "button";
+            button.className = className;
+            button.dataset.id = user.idU;
+            button.textContent = label;
+            actionsCell.appendChild(button);
+        });
 
-            <td>${user.fullName}</td>
-
-            <td>${getRoleName(user.userRank)}</td>
-
-            <td>
-
-                <button
-                    class="btn btn-sm btn-primary edit-user-button"
-                    data-id="${user.idU}">
-                    Szerkesztés
-                </button>
-
-                <button
-                    class="btn btn-sm btn-secondary change-password-button"
-                    data-id="${user.idU}">
-                    Jelszó
-                </button>
-
-                <button
-                    class="btn btn-sm btn-danger delete-user-button"
-                    data-id="${user.idU}">
-                    Törlés
-                </button>
-
-            </td>
-
-        `;
+        row.appendChild(actionsCell);
 
 
         tableBody.appendChild(row);

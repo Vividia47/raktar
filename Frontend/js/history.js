@@ -156,37 +156,24 @@ filteredHistory.forEach(record => {
 
     const row = document.createElement("tr");
 
-    row.innerHTML = `
-
-        <td>${record.idH}</td>
-
-        <td>
-            ${product ? product.name : record.idP}
-        </td>
-
-        <td>
-            ${user ? user.fullName : record.idU}
-        </td>
-
-        <td>
-            ${record.date
-                ? new Date(record.date).toLocaleString("hu-HU")
-                : ""}
-        </td>
-
-        <td>${record.invoiceNr ?? ""}</td>
-
-        <td>${record.quantity ?? ""}</td>
-
-        <td>${getMovementName(record.direction)}</td>
-
-        <td>${record.pprice ?? ""}</td>
-
-        <td>${record.sprice ?? ""}</td>
-
-        <td>${record.serialNr ?? ""}</td>
-
-    `;
+    [
+        record.idH,
+        product ? product.name : record.idP,
+        user ? user.fullName : record.idU,
+        record.date
+            ? new Date(record.date).toLocaleString("hu-HU")
+            : "",
+        record.invoiceNr ?? "",
+        record.quantity ?? "",
+        getMovementName(record.direction),
+        record.pprice ?? "",
+        record.sprice ?? "",
+        record.serialNr ?? ""
+    ].forEach(value => {
+        const cell = document.createElement("td");
+        cell.textContent = value;
+        row.appendChild(cell);
+    });
 
     tableBody.appendChild(row);
 

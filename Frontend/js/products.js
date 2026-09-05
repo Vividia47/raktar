@@ -144,67 +144,49 @@ function displayProducts() {
 
 
 
-        row.innerHTML = `
+        [
+            product.idP,
+            product.article ?? "",
+            product.barcode ?? "",
+            product.name ?? "",
+            product.vat ?? "",
+            product.lpprice ?? "",
+            product.sprice ?? "",
+            product.stock ?? "",
+            product.minStock ?? "",
+            orderQuantity,
+            product.unit ?? "",
+            product.shelf ?? "",
+            product.bundle ?? "",
+            product.bunit ?? ""
+        ].forEach(value => {
+            const cell = document.createElement("td");
+            cell.textContent = value;
+            row.appendChild(cell);
+        });
 
-            <td>${product.idP}</td>
+        const actionsCell = document.createElement("td");
+        actionsCell.classList.add("text-end");
 
-            <td>${product.article ?? ""}</td>
+        if (hasRole(1, 2, 3)) {
+            const editButton = document.createElement("button");
+            editButton.type = "button";
+            editButton.className = "btn btn-sm btn-outline-primary edit-product-button";
+            editButton.dataset.id = product.idP;
+            editButton.textContent = "Szerkesztés";
+            actionsCell.appendChild(editButton);
+        }
 
-            <td>${product.barcode ?? ""}</td>
+        if (hasRole(1, 2)) {
+            const deleteButton = document.createElement("button");
+            deleteButton.type = "button";
+            deleteButton.className = "btn btn-sm btn-outline-danger delete-product-button";
+            deleteButton.dataset.id = product.idP;
+            deleteButton.textContent = "Törlés";
+            actionsCell.appendChild(deleteButton);
+        }
 
-            <td>${product.name ?? ""}</td>
-
-            <td>${product.vat ?? ""}</td>
-
-            <td>${product.lpprice ?? ""}</td>
-
-            <td>${product.sprice ?? ""}</td>
-
-            <td>${product.stock ?? ""}</td>
-
-            <td>${product.minStock ?? ""}</td>
-
-            <td>${orderQuantity}</td>
-
-            <td>${product.unit ?? ""}</td>
-
-            <td>${product.shelf ?? ""}</td>
-
-            <td>${product.bundle ?? ""}</td>
-
-            <td>${product.bunit ?? ""}</td>
-
-
-            <td>
-
-                ${
-                    hasRole(1, 2, 3)
-                    ? `
-                    <button
-                        class="btn btn-sm btn-outline-primary edit-product-button"
-                        data-id="${product.idP}">
-                        Szerkesztés
-                    </button>
-                    `
-                    : ""
-                }
-
-
-                ${
-                    hasRole(1, 2)
-                    ? `
-                    <button
-                        class="btn btn-sm btn-outline-danger delete-product-button"
-                        data-id="${product.idP}">
-                        Törlés
-                    </button>
-                    `
-                    : ""
-                }
-
-            </td>
-
-        `;
+        row.appendChild(actionsCell);
 
 
         tableBody.appendChild(row);
