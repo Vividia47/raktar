@@ -1,5 +1,6 @@
 let editingUserId = null;
 let changingPasswordUserId = null;
+let pendingDeleteUserId = null;
 let allUsers = [];
 
 async function loadUsers() {
@@ -62,11 +63,13 @@ document.getElementById("save-edit-user-button").addEventListener("click", async
 
 document.getElementById("users-table-body").addEventListener("click", function (event) {
 
-    if (!event.target.classList.contains("change-password-button")) {
+    const passwordButton = event.target.closest(".change-password-button");
+
+    if (!passwordButton) {
         return;
     }
 
-    changingPasswordUserId = event.target.dataset.id;
+    changingPasswordUserId = passwordButton.dataset.id;
 
     document.getElementById("change-user-password").value = "";
     document.getElementById("change-user-password-confirm").value = "";
@@ -123,11 +126,13 @@ document.getElementById("save-user-password-button").addEventListener("click", a
 
 document.getElementById("users-table-body").addEventListener("click", function (event) {
 
-    if (!event.target.classList.contains("edit-user-button")) {
+    const editButton = event.target.closest(".edit-user-button");
+
+    if (!editButton) {
         return;
     }
 
-    const userId = event.target.dataset.id;
+    const userId = editButton.dataset.id;
     editingUserId = userId;
 
     const user = getLoggedInUser();
@@ -333,34 +338,48 @@ document.getElementById("save-user-button").addEventListener("click", async func
 
 document.getElementById("users-table-body").addEventListener("click", async function (event) {
 
-    if (!event.target.classList.contains("delete-user-button")) {
+    const deleteButton = event.target.closest(".delete-user-button");
+
+    if (!deleteButton) {
         return;
     }
 
-    const userId = event.target.dataset.id;
-    const currentUser = getLoggedInUser();
+    const userId = deleteButton.dataset.id;
+    const selectedUser = allUsers.find(user => user.idU == userId);
 
-    const confirmed = confirm(
-        "Biztosan törölni szeretné ezt a felhasználót?\n\n" +
-        "Ez a művelet nem vonható vissza."
-    );
+    pendingDeleteUserId = userId;
+    document.getElementById("delete-user-name").textContent =
+        selectedUser?.fullName || selectedUser?.userName || `ID: ${userId}`;
 
-    if (!confirmed) {
+    new bootstrap.Modal(
+        document.getElementById("delete-user-modal")
+    ).show();
+});
+
+document.getElementById("confirm-delete-user-button").addEventListener("click", async function () {
+    if (!pendingDeleteUserId) {
         return;
     }
 
     try {
+        const currentUser = getLoggedInUser();
 
-        await deleteUser(userId, currentUser.idU);
+        await deleteUser(
+            pendingDeleteUserId,
+            currentUser.idU
+        );
+
+        bootstrap.Modal.getInstance(
+            document.getElementById("delete-user-modal")
+        ).hide();
 
         showNotification("A felhasználó sikeresen törölve.", "success");
-
         loadUsers();
-
     } catch (error) {
-
         console.error(error);
         showNotification(error.message, "danger");
+    } finally {
+        pendingDeleteUserId = null;
     }
 });
 

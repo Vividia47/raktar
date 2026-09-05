@@ -60,13 +60,6 @@ if (usersCard) {
     usersCard.style.display = hasRole(1) ? "" : "none";
 }
 
-const usersButton = document.getElementById("users-button");
-
-if (usersButton) {
-    usersButton.addEventListener("click", function () {
-        window.location.href = "users.html";
-    });
-}
 }
 
 const savedUser = localStorage.getItem("loggedInUser");
@@ -172,26 +165,29 @@ document.getElementById("logout-button").addEventListener("click", function () {
     checkUsers();
 });
 
-const productsButton = document.getElementById("products-button");
+[
+    ["products-card", "products.html"],
+    ["stock-navigation-card", "stock.html"],
+    ["history-card", "history.html"],
+    ["users-navigation-card", "users.html"]
+].forEach(([cardId, page]) => {
+    const card = document.getElementById(cardId);
 
-console.log("Termékek gomb:", productsButton);
+    if (!card) {
+        return;
+    }
 
-if (productsButton) {
-    productsButton.addEventListener("click", function () {
-        window.location.href = "products.html";
+    const openPage = () => {
+        window.location.href = page;
+    };
+
+    card.addEventListener("click", openPage);
+    card.addEventListener("keydown", function (event) {
+        if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            openPage();
+        }
     });
-}
-
-const stockMovementsButton = document.getElementById("stock-movements-button");
-
-if (stockMovementsButton) {
-    stockMovementsButton.addEventListener("click", function () {
-        window.location.href = "stock.html";
-    });
-}
-
-document.getElementById("history-button").addEventListener("click", function () {
-    window.location.href = "history.html";
 });
 
 document.getElementById("change-password-button").addEventListener("click", function () {

@@ -1,4 +1,5 @@
 let allProducts = [];
+let pendingDeleteProductId = null;
 
 async function loadProducts() {
     try {
@@ -18,9 +19,7 @@ async function loadProducts() {
     }
 }
 
-
 function displayProducts() {
-
     const tableBody = document.getElementById("products-table-body");
     const resultCount = document.getElementById("product-result-count");
 
@@ -38,39 +37,31 @@ function displayProducts() {
         .getElementById("product-sort")
         .value;
 
-
     let filteredProducts = allProducts.filter(product => {
-
         const searchText = [
             product.name ?? "",
             product.article ?? "",
             product.barcode ?? ""
         ]
-        .join(" ")
-        .toLowerCase();
-
+            .join(" ")
+            .toLowerCase();
 
         const matchesSearch =
             search === "" ||
             searchText.includes(search);
-
 
         const orderQuantity = Math.max(
             (product.minStock ?? 0) - (product.stock ?? 0),
             0
         );
 
-
         const matchesStock =
             stockFilter === "" ||
             (stockFilter === "low" && orderQuantity > 0) ||
             (stockFilter === "ok" && orderQuantity === 0);
 
-
         return matchesSearch && matchesStock;
-
     });
-
 
 
     filteredProducts.sort((a, b) => {
@@ -213,6 +204,35 @@ function displayProducts() {
 }
 
 document
+    .getElementById("confirm-delete-product-button")
+    .addEventListener("click", async function () {
+        if (!pendingDeleteProductId) {
+            return;
+        }
+
+        try {
+            const user = getLoggedInUser();
+
+            await deleteGoods(
+                pendingDeleteProductId,
+                user.idU
+            );
+
+            bootstrap.Modal.getInstance(
+                document.getElementById("delete-product-modal")
+            ).hide();
+
+            showNotification("Sikeres törlés!", "success");
+            await loadProducts();
+        } catch (error) {
+            console.error(error);
+            showNotification(error.message, "danger");
+        } finally {
+            pendingDeleteProductId = null;
+        }
+    });
+
+document
     .getElementById("product-search")
     .addEventListener("input", displayProducts);
 
@@ -342,10 +362,12 @@ document
     .addEventListener("click", async function (event) {
 
 
-        if (event.target.classList.contains("edit-product-button")) {
+        const editButton = event.target.closest(".edit-product-button");
+
+        if (editButton) {
 
 
-            const productId = event.target.dataset.id;
+            const productId = editButton.dataset.id;
 
 
             document
@@ -357,14 +379,6 @@ document
             const products = await getGoods();
 
 
-            const product = products.find(
-                p => p.idP == productId
-            );
-
-
-            if (!product) {
-                return;
-            }
 
 
 
@@ -456,59 +470,25 @@ document
 
 
 
-        if (event.target.classList.contains("delete-product-button")) {
+        const deleteButton = event.target.closest(".delete-product-button");
+
+        if (deleteButton) {
 
 
-            const productId = event.target.dataset.id;
+            const productId = deleteButton.dataset.id;
+            const product = allProducts.find(item => item.idP == productId);
+
+            pendingDeleteProductId = productId;
+            document.getElementById("delete-product-name").textContent =
+                product?.name ?? `ID: ${productId}`;
+
+            new bootstrap.Modal(
+                document.getElementById("delete-product-modal")
+            ).show();
+
+            return;
 
 
-
-            const confirmed = confirm(
-
-                "Biztosan törölni szeretné ezt a terméket?\n\n" +
-
-                "A termékhez tartozó mozgástörténet is törlődni fog.\n" +
-
-                "Ez a művelet nem vonható vissza."
-
-            );
-
-
-
-            if (!confirmed) {
-
-                return;
-
-            }
-
-
-
-            try {
-
-
-                const user = getLoggedInUser();
-
-
-                await deleteGoods(
-                    productId,
-                    user.idU
-                );
-
-
-                showNotification("Sikeres törlés!", "success");
-
-
-                await loadProducts();
-
-
-
-            } catch (error) {
-
-                console.error(error);
-
-                showNotification(error.message, "danger");
-
-            }
 
         }
 

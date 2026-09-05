@@ -6,6 +6,17 @@
     flex-shrink: 0;
 }
 
+.dashboard-card {
+    cursor: pointer;
+    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.dashboard-card:hover,
+.dashboard-card:focus-visible {
+    background-color: #eaf4ff;
+    box-shadow: 0 0.5rem 1rem rgba(13, 110, 253, 0.15) !important;
+}
+
 .notification-container {
     position: fixed;
     top: 1rem;
