@@ -1,3 +1,26 @@
+.page-header {
+    gap: 1rem;
+}
+
+.page-header-actions {
+    flex-shrink: 0;
+}
+
+@media (max-width: 575.98px) {
+    .page-header {
+        align-items: stretch !important;
+        flex-direction: column;
+    }
+
+    .page-header-actions {
+        width: 100%;
+    }
+
+    .page-header-actions > .btn {
+        flex: 1 1 auto;
+    }
+}
+
 .low-stock td {
     color: #8b0000;
 }
