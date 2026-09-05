@@ -1,55 +1,27 @@
 let editingUserId = null;
 let changingPasswordUserId = null;
+let allUsers = [];
 
 async function loadUsers() {
+
     try {
+
         const user = getLoggedInUser();
 
         if (!user) {
             return;
         }
 
-        const users = await getUsers(user.idU);
+        allUsers = await getUsers(user.idU);
 
-        const tableBody = document.getElementById("users-table-body");
-
-        tableBody.innerHTML = "";
-
-        users.forEach(function (user) {
-            const row = document.createElement("tr");
-
-            row.innerHTML = `
-                <td>${user.idU}</td>
-                <td>${user.userName}</td>
-                <td>${user.fullName}</td>
-                <td>${getRoleName(user.userRank)}</td>
-                <td>
-                    <button
-    class="btn btn-sm btn-primary edit-user-button"
-    data-id="${user.idU}">
-    Szerkesztés
-</button>
-
-<button
-    class="btn btn-sm btn-secondary change-password-button"
-    data-id="${user.idU}">
-    Jelszó
-</button>
-
-                    <button
-    class="btn btn-sm btn-danger delete-user-button"
-    data-id="${user.idU}">
-    Törlés
-</button>
-                </td>
-            `;
-
-            tableBody.appendChild(row);
-        });
+        displayUsers();
 
     } catch (error) {
+
         console.error(error);
+
         alert("Nem sikerült betölteni a felhasználókat.");
+
     }
 }
 
@@ -187,6 +159,109 @@ document.getElementById("users-table-body").addEventListener("click", function (
     });
 });
 
+function displayUsers() {
+
+    const tableBody = document.getElementById("users-table-body");
+
+    const search = document
+        .getElementById("user-search")
+        .value
+        .toLowerCase()
+        .trim();
+
+    const roleFilter =
+        document.getElementById("user-role-filter").value;
+
+
+    const filteredUsers = allUsers.filter(user => {
+
+        const matchesSearch =
+            search === "" ||
+            user.userName.toLowerCase().includes(search) ||
+            user.fullName.toLowerCase().includes(search);
+
+
+        const matchesRole =
+            roleFilter === "" ||
+            user.userRank == roleFilter;
+
+
+        return matchesSearch && matchesRole;
+
+    });
+
+
+    tableBody.innerHTML = "";
+
+
+    if (filteredUsers.length === 0) {
+
+        tableBody.innerHTML = `
+            <tr>
+                <td colspan="5" class="text-center text-muted py-4">
+                    Nincs találat
+                </td>
+            </tr>
+        `;
+
+        return;
+
+    }
+
+
+    filteredUsers.forEach(function (user) {
+
+        const row = document.createElement("tr");
+
+
+        if (user.userRank === 1) {
+
+            row.classList.add("manager-user");
+
+        }
+
+
+        row.innerHTML = `
+
+            <td>${user.idU}</td>
+
+            <td>${user.userName}</td>
+
+            <td>${user.fullName}</td>
+
+            <td>${getRoleName(user.userRank)}</td>
+
+            <td>
+
+                <button
+                    class="btn btn-sm btn-primary edit-user-button"
+                    data-id="${user.idU}">
+                    Szerkesztés
+                </button>
+
+                <button
+                    class="btn btn-sm btn-secondary change-password-button"
+                    data-id="${user.idU}">
+                    Jelszó
+                </button>
+
+                <button
+                    class="btn btn-sm btn-danger delete-user-button"
+                    data-id="${user.idU}">
+                    Törlés
+                </button>
+
+            </td>
+
+        `;
+
+
+        tableBody.appendChild(row);
+
+    });
+
+}
+
 function getRoleName(rank) {
     const roles = {
         1: "Raktárvezető",
@@ -265,5 +340,15 @@ document.getElementById("back-button").addEventListener("click", function () {
     window.location.href = "index.html";
 });
 
+document.getElementById("user-search").addEventListener(
+    "input",
+    displayUsers
+);
+
+
+document.getElementById("user-role-filter").addEventListener(
+    "change",
+    displayUsers
+);
 
 loadUsers();

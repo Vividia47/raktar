@@ -1,3 +1,7 @@
 .low-stock td {
     color: #8b0000;
 }
+
+.manager-user td {
+    color: #007751;
+}
