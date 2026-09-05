@@ -25,9 +25,11 @@ async function loadProducts() {
                 <td>${product.bundle ?? ""}</td>
                 <td>${product.bUnit ?? ""}</td>
                 <td>
-                    <button class="btn btn-sm btn-outline-primary">
-                        Megtekintés
-                    </button>
+                    <button
+    class="btn btn-sm btn-outline-primary edit-product-button"
+    data-id="${product.idP}">
+    Szerkesztés
+</button>
                 </td>
             `;
 
@@ -76,6 +78,81 @@ document.activeElement.blur();
 modal.hide();
 
 await loadProducts();
+
+    } catch (error) {
+        console.error(error);
+        alert(error.message);
+    }
+});
+
+document.getElementById("products-table-body").addEventListener("click", async function (event) {
+
+    if (event.target.classList.contains("edit-product-button")) {
+
+    const productId = event.target.dataset.id;
+
+    document.getElementById("edit-product-form").dataset.id = productId;
+
+    const products = await getGoods();
+
+    const product = products.find(p => p.idP == productId);
+
+    document.getElementById("edit-product-article").value = product.article ?? "";
+document.getElementById("edit-product-barcode").value = product.barcode ?? "";
+document.getElementById("edit-product-name").value = product.name ?? "";
+document.getElementById("edit-product-vat").value = product.vat ?? "";
+document.getElementById("edit-product-min-stock").value = product.minStock ?? "";
+document.getElementById("edit-product-unit").value = product.unit ?? "";
+document.getElementById("edit-product-shelf").value = product.shelf ?? "";
+document.getElementById("edit-product-bundle").value = product.bundle ?? "";
+document.getElementById("edit-product-bunit").value = product.bunit ?? "";
+
+    console.log("Szerkesztendő termék:", product);
+
+    const modal = new bootstrap.Modal(
+        document.getElementById("edit-product-modal")
+    );
+
+    modal.show();
+}
+
+});
+
+document.getElementById("edit-product-modal").addEventListener("hide.bs.modal", function () {
+    document.activeElement.blur();
+});
+
+document.getElementById("edit-product-form").addEventListener("submit", async function (event) {
+    event.preventDefault();
+
+    const productId = this.dataset.id;
+
+    const product = {
+        article: document.getElementById("edit-product-article").value,
+        barcode: document.getElementById("edit-product-barcode").value,
+        name: document.getElementById("edit-product-name").value,
+        vat: Number(document.getElementById("edit-product-vat").value),
+        minStock: Number(document.getElementById("edit-product-min-stock").value),
+        unit: document.getElementById("edit-product-unit").value,
+        shelf: document.getElementById("edit-product-shelf").value,
+        bundle: Number(document.getElementById("edit-product-bundle").value),
+        bunit: document.getElementById("edit-product-bunit").value
+    };
+
+    try {
+        await updateGoods(productId, product);
+
+        alert("Sikeres módosítás!");
+
+        const modal = bootstrap.Modal.getInstance(
+            document.getElementById("edit-product-modal")
+        );
+
+        document.activeElement.blur();
+
+        modal.hide();
+
+        await loadProducts();
 
     } catch (error) {
         console.error(error);

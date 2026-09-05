@@ -41,3 +41,21 @@ async function addGoods(product) {
 
     return data.result;
 }
+
+async function updateGoods(id, product) {
+    const response = await fetch(`${API_BASE_URL}/goods?id=${id}`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(product)
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+        throw new Error(data.message || "Nem sikerült módosítani a terméket.");
+    }
+
+    return data.result;
+}
