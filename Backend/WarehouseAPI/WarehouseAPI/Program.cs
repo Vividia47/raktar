@@ -25,6 +25,16 @@ namespace WarehouseAPI
             // Add services to the container.
 
             builder.Services.AddControllers();
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("Frontend", policy =>
+                {
+                    policy
+                        .AllowAnyOrigin()
+                        .AllowAnyHeader()
+                        .AllowAnyMethod();
+                });
+            });
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
             builder.Services.AddOpenApi();
 
@@ -38,6 +48,7 @@ namespace WarehouseAPI
             }
 
             app.UseHttpsRedirection();
+            app.UseCors("Frontend");
 
             app.UseAuthorization();
 

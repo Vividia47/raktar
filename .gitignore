@@ -1,1 +1,10 @@
-Backend/WarehouseAPI/.vs/
+.vs/
+**/.vs/
+**/bin/
+**/obj/
+**/*.csproj.user
+.vscode/
+*.user
+*.suo
+.DS_Store
+Thumbs.db

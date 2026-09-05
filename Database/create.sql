@@ -47,6 +47,3 @@ CREATE TABLE history (
         FOREIGN KEY (idU)
         REFERENCES users(idU)
 ) ENGINE=InnoDB;
-
-INSERT INTO users (UserName, FullName, Password, UserRank)
-VALUES ('admin', 'Admin', 'admin', 1);
