@@ -24,6 +24,18 @@ async function checkUsers() {
 
 checkUsers();
 
+const savedUser = localStorage.getItem("loggedInUser");
+
+if (savedUser) {
+    const user = JSON.parse(savedUser);
+
+    document.getElementById("auth-section").classList.add("d-none");
+    document.getElementById("dashboard-section").classList.remove("d-none");
+
+    document.getElementById("welcome-message").textContent =
+        `Üdvözöljük, ${user.fullName}!`;
+}
+
 document.getElementById("register-form").addEventListener("submit", async function (event) {
     event.preventDefault();
 
@@ -100,7 +112,8 @@ document.getElementById("dashboard-section").classList.remove("d-none");
 document.getElementById("welcome-message").textContent =
     `Üdvözöljük, ${data.result.fullName}!`;
 
-console.log("Sikeres bejelentkezés:", data.result);
+localStorage.setItem("loggedInUser", JSON.stringify(data.result));
+console.log("Bejelentkezett felhasználó:", data.result);
 
     } catch (error) {
         console.error(error);
@@ -109,6 +122,8 @@ console.log("Sikeres bejelentkezés:", data.result);
 });
 
 document.getElementById("logout-button").addEventListener("click", function () {
+    localStorage.removeItem("loggedInUser");
+
     document.getElementById("dashboard-section").classList.add("d-none");
     document.getElementById("auth-section").classList.remove("d-none");
 
@@ -116,3 +131,13 @@ document.getElementById("logout-button").addEventListener("click", function () {
 
     checkUsers();
 });
+
+const productsButton = document.getElementById("products-button");
+
+console.log("Termékek gomb:", productsButton);
+
+if (productsButton) {
+    productsButton.addEventListener("click", function () {
+        window.location.href = "products.html";
+    });
+}
