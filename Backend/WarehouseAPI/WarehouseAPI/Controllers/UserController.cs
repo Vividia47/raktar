@@ -77,6 +77,34 @@ if (user.UserRank != 1)
             }
         }
 
+        [HttpGet("names")]
+public async Task<ActionResult> GetUserNames()
+{
+    try
+    {
+        var users = await _warehouseContext.Users
+            .Select(x => new
+            {
+                idU = x.IdU,
+                fullName = x.FullName
+            })
+            .ToListAsync();
+
+        return Ok(new
+        {
+            message = "Sikeres lekérdezés.",
+            result = users
+        });
+    }
+    catch (Exception ex)
+    {
+        return StatusCode(400, new
+        {
+            message = ex.Message
+        });
+    }
+}
+
         [HttpGet("exists")]
 public async Task<ActionResult> UsersExist()
 {

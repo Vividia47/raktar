@@ -21,6 +21,10 @@ const orderQuantity = Math.max(
     0
 );
 
+if (orderQuantity > 0) {
+    row.classList.add("low-stock");
+}
+
             row.innerHTML = `
                 <td>${product.idP}</td>
                 <td>${product.article ?? ""}</td>

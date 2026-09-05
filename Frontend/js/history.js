@@ -2,8 +2,7 @@ async function loadHistory() {
     try {
         const history = await getHistory();
         const products = await getGoods();
-        const user = getLoggedInUser();
-const users = await getUsers(user.idU);
+        const users = await getUserNames();
 
         const tableBody = document.getElementById("history-table-body");
 

@@ -14,6 +14,19 @@ async function getUsers(userId) {
     return data.result;
 }
 
+async function getUserNames() {
+    const response = await fetch(
+        `${API_BASE_URL}/user/names`
+    );
+
+    if (!response.ok) {
+        throw new Error("Nem sikerült lekérni a felhasználóneveket.");
+    }
+
+    const data = await response.json();
+    return data.result;
+}
+
 async function usersExist() {
     const response = await fetch(`${API_BASE_URL}/user/exists`);
 
