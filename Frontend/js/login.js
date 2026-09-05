@@ -24,6 +24,36 @@ async function checkUsers() {
 
 checkUsers();
 
+function updateDashboard() {
+    const user = getLoggedInUser();
+
+    if (!user) {
+        return;
+    }
+
+    const roles = {
+        1: "Raktárvezető",
+        2: "Raktáros",
+        3: "Kereskedő",
+        4: "Anyagbeszerző"
+    };
+
+    const userInfo = document.getElementById("user-info");
+
+    if (userInfo) {
+        userInfo.textContent =
+            `Bejelentkezve: ${user.fullName} — ${roles[user.userRank]}`;
+    }
+
+    const stockMovementsCard =
+        document.getElementById("stock-movements-card");
+
+    if (stockMovementsCard) {
+        stockMovementsCard.style.display =
+            hasRole(1, 2) ? "" : "none";
+    }
+}
+
 const savedUser = localStorage.getItem("loggedInUser");
 
 if (savedUser) {
@@ -32,17 +62,7 @@ if (savedUser) {
     document.getElementById("auth-section").classList.add("d-none");
     document.getElementById("dashboard-section").classList.remove("d-none");
 
-    const userInfo = document.getElementById("user-info");
-
-const roles = {
-    1: "Raktárvezető",
-    2: "Raktáros",
-    3: "Kereskedő",
-    4: "Anyagbeszerző"
-};
-
-userInfo.textContent =
-    `Bejelentkezve: ${user.fullName} — ${roles[user.userRank]}`;
+    updateDashboard();
 }
 
 document.getElementById("register-form").addEventListener("submit", async function (event) {
@@ -113,11 +133,12 @@ document.getElementById("login-form").addEventListener("submit", async function 
             return;
         }
 
+localStorage.setItem("loggedInUser", JSON.stringify(data.result));
+
 document.getElementById("auth-section").classList.add("d-none");
 document.getElementById("dashboard-section").classList.remove("d-none");
 
-localStorage.setItem("loggedInUser", JSON.stringify(data.result));
-console.log("Bejelentkezett felhasználó:", data.result);
+updateDashboard();
 
     } catch (error) {
         console.error(error);
@@ -144,12 +165,6 @@ if (productsButton) {
     productsButton.addEventListener("click", function () {
         window.location.href = "products.html";
     });
-}
-
-const stockMovementsCard = document.getElementById("stock-movements-card");
-
-if (stockMovementsCard) {
-    stockMovementsCard.style.display = hasRole(1, 2) ? "" : "none";
 }
 
 const stockMovementsButton = document.getElementById("stock-movements-button");

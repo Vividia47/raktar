@@ -176,10 +176,14 @@
         </div>
 
     </div>
-    
+
 <script src="js/api.js"></script>
 <script>
     requireLogin();
+
+    if (!hasRole(1, 2)) {
+        window.location.href = "index.html";
+    }
 </script>
 <script src="js/stock.js"></script>
 

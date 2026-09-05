@@ -86,7 +86,9 @@ document.getElementById("add-product-form").addEventListener("submit", async fun
     };
 
     try {
-        const newProduct = await addGoods(product);
+        const user = getLoggedInUser();
+
+    const newProduct = await addGoods(product, user.idU);
 
         alert("Sikeres termékfelvétel!");
 
@@ -179,7 +181,7 @@ document.getElementById("edit-product-form").addEventListener("submit", async fu
                 document.getElementById("edit-product-sprice").value
             );
 
-            await updateSellingPrice(productId, sprice);
+            await updateSellingPrice(productId, sprice, user.idU);
 
         } else {
 
@@ -195,7 +197,7 @@ document.getElementById("edit-product-form").addEventListener("submit", async fu
                 bunit: document.getElementById("edit-product-bunit").value
             };
 
-            await updateGoods(productId, product);
+            await updateGoods(productId, product, user.idU);
         }
 
         alert("Sikeres módosítás!");
@@ -229,7 +231,9 @@ document.getElementById("products-table-body").addEventListener("click", async f
         }
 
         try {
-            await deleteGoods(productId);
+            const user = getLoggedInUser();
+
+await deleteGoods(productId, user.idU);
 
             alert("Sikeres törlés!");
 

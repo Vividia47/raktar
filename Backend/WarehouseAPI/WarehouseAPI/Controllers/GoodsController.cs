@@ -18,11 +18,29 @@ namespace WarehouseAPI.Controllers
             _warehousecontext = warehousecontext;
         }
 
-        [HttpPost] 
-        public async Task<ActionResult> AddNewGoods( AddGoodsDto addGoodsDto)
+        [HttpPost]
+public async Task<ActionResult> AddNewGoods(
+    [FromQuery] int userId,
+    [FromBody] AddGoodsDto addGoodsDto)
         {
             try
             {
+var user = await _warehousecontext.Users
+        .FirstOrDefaultAsync(x => x.IdU == userId);
+
+    if (user == null)
+    {
+        return NotFound(new
+        {
+            message = "Nincs ilyen felhasználó."
+        });
+    }
+
+    if (user.UserRank != 1 && user.UserRank != 2)
+    {
+        return Forbid();
+    }
+
                 var goods = new Goods
                 {
                     Article = addGoodsDto.Article,
@@ -90,10 +108,29 @@ namespace WarehouseAPI.Controllers
         }
 
         [HttpPut]
-        public async Task<ActionResult> UpdateGoods([FromQuery]int id, [FromBody] UpdateGoodsDto updateGoodsDto)
+public async Task<ActionResult> UpdateGoods(
+    [FromQuery] int id,
+    [FromQuery] int userId,
+    [FromBody] UpdateGoodsDto updateGoodsDto)
         {
             try
             {
+var user = await _warehousecontext.Users
+    .FirstOrDefaultAsync(x => x.IdU == userId);
+
+if (user == null)
+{
+    return NotFound(new
+    {
+        message = "Nincs ilyen felhasználó."
+    });
+}
+
+if (user.UserRank != 1 && user.UserRank != 2)
+{
+    return Forbid();
+}
+
                 var goods = await _warehousecontext.Goods.FirstOrDefaultAsync(x => x.IdP == id); ;
 
                 if (goods  != null)
@@ -125,10 +162,27 @@ namespace WarehouseAPI.Controllers
         [HttpPut("price")]
 public async Task<ActionResult> UpdateSellingPrice(
     [FromQuery] int id,
+    [FromQuery] int userId,
     [FromBody] float sprice)
 {
     try
     {
+var user = await _warehousecontext.Users
+    .FirstOrDefaultAsync(x => x.IdU == userId);
+
+if (user == null)
+{
+    return NotFound(new
+    {
+        message = "Nincs ilyen felhasználó."
+    });
+}
+
+if (user.UserRank != 1 && user.UserRank != 3)
+{
+    return Forbid();
+}
+
         var goods = await _warehousecontext.Goods
             .FirstOrDefaultAsync(x => x.IdP == id);
 
@@ -162,10 +216,28 @@ public async Task<ActionResult> UpdateSellingPrice(
 }
 
         [HttpDelete]
-public async Task<ActionResult> DeleteGoods(int id)
+public async Task<ActionResult> DeleteGoods(
+    [FromQuery] int id,
+    [FromQuery] int userId)
 {
     try
     {
+        var user = await _warehousecontext.Users
+    .FirstOrDefaultAsync(x => x.IdU == userId);
+
+if (user == null)
+{
+    return NotFound(new
+    {
+        message = "Nincs ilyen felhasználó."
+    });
+}
+
+if (user.UserRank != 1 && user.UserRank != 2)
+{
+    return Forbid();
+}
+
         var goods = await _warehousecontext.Goods.FindAsync(id);
 
         if (goods != null)
@@ -228,6 +300,22 @@ public async Task<ActionResult> DeleteGoods(int id)
         {
             try
             {
+var user = await _warehousecontext.Users
+    .FirstOrDefaultAsync(x => x.IdU == movementGoodsDto.IdU);
+
+if (user == null)
+{
+    return NotFound(new
+    {
+        message = "Nincs ilyen felhasználó."
+    });
+}
+
+if (user.UserRank != 1 && user.UserRank != 2)
+{
+    return Forbid();
+}
+
                 var goods = await _warehousecontext.Goods.FirstOrDefaultAsync(x => x.IdP == id); ;
 
                 if (goods != null)

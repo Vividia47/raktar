@@ -24,12 +24,10 @@ async function getGoods() {
     return data.result;
 }
 
-async function addGoods(product) {
-    const response = await fetch(`${API_BASE_URL}/goods`, {
+async function addGoods(product, userId) {
+    const response = await fetch(`${API_BASE_URL}/goods?userId=${userId}`, {
         method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
+        headers: {"Content-Type": "application/json"},
         body: JSON.stringify(product)
     });
 
@@ -42,8 +40,8 @@ async function addGoods(product) {
     return data.result;
 }
 
-async function updateGoods(id, product) {
-    const response = await fetch(`${API_BASE_URL}/goods?id=${id}`, {
+async function updateGoods(id, product, userId) {
+    const response = await fetch(`${API_BASE_URL}/goods?id=${id}&userId=${userId}`, {
         method: "PUT",
         headers: {
             "Content-Type": "application/json"
@@ -60,8 +58,10 @@ async function updateGoods(id, product) {
     return data.result;
 }
 
-async function deleteGoods(id) {
-    const response = await fetch(`${API_BASE_URL}/goods?id=${id}`, {
+async function deleteGoods(id, userId) {
+    const response = await fetch(
+        `${API_BASE_URL}/goods?id=${id}&userId=${userId}`,
+        {
         method: "DELETE"
     });
 
@@ -132,8 +132,8 @@ function hasRole(...allowedRanks) {
     return allowedRanks.includes(user.userRank);
 }
 
-async function updateSellingPrice(id, sprice) {
-    const response = await fetch(`${API_BASE_URL}/goods/price?id=${id}`, {
+async function updateSellingPrice(id, sprice, userId) {
+    const response = await fetch(`${API_BASE_URL}/goods/price?id=${id}&userId=${userId}`, {
         method: "PUT",
         headers: {
             "Content-Type": "application/json"
