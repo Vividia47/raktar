@@ -141,3 +141,7 @@ if (productsButton) {
         window.location.href = "products.html";
     });
 }
+
+document.getElementById("stock-movements-button").addEventListener("click", function () {
+    window.location.href = "stock.html";
+});

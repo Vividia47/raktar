@@ -16,14 +16,14 @@ async function loadProducts() {
                 <td>${product.barcode ?? ""}</td>
                 <td>${product.name ?? ""}</td>
                 <td>${product.vat ?? ""}</td>
-                <td>${product.lpPrice ?? ""}</td>
-                <td>${product.sPrice ?? ""}</td>
+                <td>${product.lpprice ?? ""}</td>
+                <td>${product.sprice ?? ""}</td>
                 <td>${product.stock ?? ""}</td>
                 <td>${product.minStock ?? ""}</td>
                 <td>${product.unit ?? ""}</td>
                 <td>${product.shelf ?? ""}</td>
                 <td>${product.bundle ?? ""}</td>
-                <td>${product.bUnit ?? ""}</td>
+                <td>${product.bunit ?? ""}</td>
                 <td>
     <button
         class="btn btn-sm btn-outline-primary edit-product-button"

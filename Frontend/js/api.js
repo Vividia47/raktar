@@ -73,3 +73,21 @@ async function deleteGoods(id) {
 
     return data.result;
 }
+
+async function movementGoods(id, movement) {
+    const response = await fetch(`${API_BASE_URL}/goods/movement?id=${id}`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(movement)
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+        throw new Error(data.message || "Nem sikerült rögzíteni a készletmozgást.");
+    }
+
+    return data.result;
+}

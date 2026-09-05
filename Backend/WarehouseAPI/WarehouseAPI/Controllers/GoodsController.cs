@@ -198,13 +198,21 @@ public async Task<ActionResult> DeleteGoods(int id)
                     float r = movementGoodsDto.Stock;
 
                     if (i > 200)
-                    {
-                        goods.Stock -= r;
-                    }
-                    else
-                    {
-                        goods.Stock += r;
-                    }
+{
+    if (r > goods.Stock)
+    {
+        return BadRequest(new
+        {
+            message = "Nincs elegendő készlet a készletmozgás végrehajtásához."
+        });
+    }
+
+    goods.Stock -= r;
+}
+else
+{
+    goods.Stock += r;
+}
 
                     if (i == 101 || i == 102)
                     {

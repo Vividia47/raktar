@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Készletmozgás - Raktárkezelő</title>
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body class="bg-light">
+
+    <div class="container py-4">
+
+        <div class="d-flex justify-content-between align-items-center mb-4">
+
+            <div>
+                <h1>Készletmozgás</h1>
+                <p class="text-muted mb-0">
+                    Készlet növelése vagy csökkentése
+                </p>
+            </div>
+
+            <button
+                id="back-button"
+                class="btn btn-outline-secondary">
+                Vissza
+            </button>
+
+        </div>
+
+        <div class="card shadow-sm">
+
+            <div class="card-body">
+
+                <h2 class="h4 mb-4">
+                    Új készletmozgás
+                </h2>
+
+                <form id="movement-form">
+
+                    <div class="mb-3">
+                        <label for="movement-product" class="form-label">
+                            Termék
+                        </label>
+
+                        <select
+                            id="movement-product"
+                            class="form-select"
+                            required>
+
+                            <option value="">
+                                -- Válassz terméket --
+                            </option>
+
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="movement-type" class="form-label">
+                            Mozgás típusa
+                        </label>
+
+                        <select
+                            id="movement-type"
+                            class="form-select"
+                            required>
+
+                            <option value="">
+                                -- Válassz mozgástípust --
+                            </option>
+
+                            <option value="101">
+                                101 - Beszerzés
+                            </option>
+
+                            <option value="102">
+                                102 - Bizományos bevételezés
+                            </option>
+
+                            <option value="103">
+                                103 - Téves selejtezés visszavétele
+                            </option>
+
+                            <option value="104">
+                                104 - Saját rezsi anyag visszavétele
+                            </option>
+
+                            <option value="201">
+                                201 - Értékesítés
+                            </option>
+
+                            <option value="202">
+                                202 - Bizományos kiadás
+                            </option>
+
+                            <option value="203">
+                                203 - Selejtezés
+                            </option>
+
+                            <option value="204">
+                                204 - Saját rezsi felhasználás
+                            </option>
+
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="movement-quantity" class="form-label">
+                            Mennyiség
+                        </label>
+
+                        <input
+                            type="number"
+                            id="movement-quantity"
+                            class="form-control"
+                            min="0.01"
+                            step="0.01"
+                            required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="movement-price" class="form-label">
+                            Beszerzési ár
+                        </label>
+
+                        <input
+                            type="number"
+                            id="movement-price"
+                            class="form-control"
+                            min="0"
+                            step="0.01"
+                            value="0">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="movement-invoice" class="form-label">
+                            Bizonylatszám
+                        </label>
+
+                        <input
+                            type="text"
+                            id="movement-invoice"
+                            class="form-control"
+                            maxlength="100">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="movement-serial" class="form-label">
+                            Sorozatszám
+                        </label>
+
+                        <input
+                            type="text"
+                            id="movement-serial"
+                            class="form-control"
+                            maxlength="50">
+                    </div>
+
+                    <button
+                        type="submit"
+                        class="btn btn-primary">
+                        Készletmozgás mentése
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <script src="js/api.js"></script>
+    <script src="js/stock.js"></script>
+
+</body>
+</html>
