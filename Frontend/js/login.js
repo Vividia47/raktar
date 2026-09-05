@@ -1,11 +1,11 @@
 async function checkUsers() {
     try {
-        const users = await getUsers();
+        const usersExistResult = await usersExist();
 
         const registerSection = document.getElementById("register-section");
         const loginSection = document.getElementById("login-section");
 
-        if (users.length === 0) {
+        if (!usersExistResult) {
             registerSection.classList.remove("d-none");
             loginSection.classList.add("d-none");
 
@@ -52,6 +52,20 @@ function updateDashboard() {
         stockMovementsCard.style.display =
             hasRole(1, 2) ? "" : "none";
     }
+
+    const usersCard = document.getElementById("users-card");
+
+if (usersCard) {
+    usersCard.style.display = hasRole(1) ? "" : "none";
+}
+
+const usersButton = document.getElementById("users-button");
+
+if (usersButton) {
+    usersButton.addEventListener("click", function () {
+        window.location.href = "users.html";
+    });
+}
 }
 
 const savedUser = localStorage.getItem("loggedInUser");

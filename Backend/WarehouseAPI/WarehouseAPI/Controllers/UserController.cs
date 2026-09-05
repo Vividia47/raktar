@@ -49,10 +49,26 @@ namespace WarehouseAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> GetAllUsers()
+public async Task<ActionResult> GetAllUsers([FromQuery] int userId)
         {
             try
             {
+
+                var user = await _warehouseContext.Users
+    .FirstOrDefaultAsync(x => x.IdU == userId);
+
+if (user == null)
+{
+    return NotFound(new
+    {
+        message = "Nincs ilyen felhasználó."
+    });
+}
+
+if (user.UserRank != 1)
+{
+    return Forbid();
+}
                 return Ok(new { message = "Sikeres lekérdezés", result = await _warehouseContext.Users.ToListAsync() });
             }
             catch (Exception ex)
@@ -60,6 +76,27 @@ namespace WarehouseAPI.Controllers
                 return StatusCode(400, new { message = ex.Message });
             }
         }
+
+        [HttpGet("exists")]
+public async Task<ActionResult> UsersExist()
+{
+    try
+    {
+        var exists = await _warehouseContext.Users.AnyAsync();
+
+        return Ok(new
+        {
+            result = exists
+        });
+    }
+    catch (Exception ex)
+    {
+        return StatusCode(400, new
+        {
+            message = ex.Message
+        });
+    }
+}
 
         [HttpGet("byid")]
         public async Task<ActionResult> GetUserByID(int id)

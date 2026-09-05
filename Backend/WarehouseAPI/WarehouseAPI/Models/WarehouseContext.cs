@@ -57,8 +57,9 @@ public partial class WarehouseContext : DbContext
             entity.Property(e => e.Sprice).HasColumnName("SPrice");
 
             entity.HasOne(d => d.IdPNavigation).WithMany(p => p.Histories)
-                .HasForeignKey(d => d.IdP)
-                .HasConstraintName("history_ibfk_1");
+    .HasForeignKey(d => d.IdP)
+    .OnDelete(DeleteBehavior.Cascade)
+    .HasConstraintName("history_ibfk_1");
 
             entity.HasOne(d => d.IdUNavigation).WithMany(p => p.Histories)
                 .HasForeignKey(d => d.IdU)

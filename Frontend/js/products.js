@@ -224,7 +224,11 @@ document.getElementById("products-table-body").addEventListener("click", async f
 
         const productId = event.target.dataset.id;
 
-        const confirmed = confirm("Biztosan törölni szeretné ezt a terméket?");
+        const confirmed = confirm(
+    "Biztosan törölni szeretné ezt a terméket?\n\n" +
+    "A termékhez tartozó mozgástörténet is törlődni fog.\n" +
+    "Ez a művelet nem vonható vissza."
+);
 
         if (!confirmed) {
             return;

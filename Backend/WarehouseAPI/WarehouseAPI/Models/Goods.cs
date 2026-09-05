@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace WarehouseAPI.Models;
 
@@ -31,5 +32,6 @@ public partial class Goods
 
     public string? Bunit { get; set; }
 
-    public virtual ICollection<History> Histories { get; set; } = new List<History>();
+    [JsonIgnore]
+public virtual ICollection<History> Histories { get; set; } = new List<History>();
 }
