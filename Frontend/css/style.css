@@ -35,6 +35,18 @@
     .page-header-actions > .btn {
         flex: 1 1 auto;
     }
+
+    .logout-button .logout-label {
+        display: none;
+    }
+
+    .password-button .password-label {
+        display: none;
+    }
+
+    .back-button .back-label {
+        display: none;
+    }
 }
 
 @media (max-width: 767.98px) {
@@ -126,6 +138,10 @@
     .history-table td:nth-child(1),
     .history-table td:nth-child(8),
     .history-table td:nth-child(9) {
+        display: none;
+    }
+
+    .users-table td:nth-child(1) {
         display: none;
     }
 }

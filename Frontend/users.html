@@ -12,6 +12,11 @@
     rel="stylesheet"
 >
 
+<link
+    href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    rel="stylesheet"
+>
+
 <link rel="stylesheet" href="css/style.css">
 
 </head>
@@ -32,8 +37,11 @@
         <div class="page-header-actions d-flex">
         <button
             id="back-button"
-            class="btn btn-outline-secondary">
-            Vissza
+            class="btn btn-outline-secondary back-button"
+            aria-label="Vissza"
+            title="Vissza">
+            <i class="bi bi-arrow-return-left" aria-hidden="true"></i>
+            <span class="back-label">Vissza</span>
         </button>
         </div>
 
@@ -50,7 +58,8 @@
     class="btn btn-primary"
     data-bs-toggle="modal"
     data-bs-target="#add-user-modal">
-    + Új felhasználó
+    <i class="bi bi-plus" aria-hidden="true"></i>
+    Új felhasználó
 </button>
 
             </div>
@@ -123,7 +132,7 @@
 
             <div class="table-responsive">
 
-                <table class="table table-striped table-hover align-middle">
+                <table class="table table-striped table-hover align-middle mobile-card-table users-table">
 
                     <caption class="visually-hidden">
                         A rendszer felhasználóinak listája

@@ -11,6 +11,11 @@
         rel="stylesheet"
     >
 
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+        rel="stylesheet"
+    >
+
     <link rel="stylesheet" href="css/style.css">
 </head>
 
@@ -185,14 +190,20 @@
                 <div class="page-header-actions d-flex gap-2">
     <button
         id="change-password-button"
-        class="btn btn-outline-secondary">
-        Jelszó módosítása
+        class="btn btn-outline-secondary password-button"
+        aria-label="Jelszó módosítása"
+        title="Jelszó módosítása">
+        <i class="bi bi-gear" aria-hidden="true"></i>
+        <span class="password-label">Jelszó módosítása</span>
     </button>
 
     <button
         id="logout-button"
-        class="btn btn-outline-danger">
-        Kijelentkezés
+        class="btn btn-outline-danger logout-button"
+        aria-label="Kijelentkezés"
+        title="Kijelentkezés">
+        <i class="bi bi-box-arrow-right" aria-hidden="true"></i>
+        <span class="logout-label">Kijelentkezés</span>
     </button>
 </div>
 

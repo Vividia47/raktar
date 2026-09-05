@@ -176,7 +176,14 @@ function displayProducts() {
             editButton.type = "button";
             editButton.className = "btn btn-sm btn-primary edit-product-button";
             editButton.dataset.id = product.idP;
-            editButton.textContent = "Szerkesztés";
+            editButton.setAttribute("aria-label", "Szerkesztés");
+            editButton.title = "Szerkesztés";
+
+            const editIcon = document.createElement("i");
+            editIcon.className = "bi bi-pencil";
+            editIcon.setAttribute("aria-hidden", "true");
+            editButton.appendChild(editIcon);
+
             actionsCell.appendChild(editButton);
         }
 
@@ -185,7 +192,14 @@ function displayProducts() {
             deleteButton.type = "button";
             deleteButton.className = "btn btn-sm btn-danger delete-product-button";
             deleteButton.dataset.id = product.idP;
-            deleteButton.textContent = "Törlés";
+            deleteButton.setAttribute("aria-label", "Törlés");
+            deleteButton.title = "Törlés";
+
+            const deleteIcon = document.createElement("i");
+            deleteIcon.className = "bi bi-trash";
+            deleteIcon.setAttribute("aria-hidden", "true");
+            deleteButton.appendChild(deleteIcon);
+
             actionsCell.appendChild(deleteButton);
         }
 

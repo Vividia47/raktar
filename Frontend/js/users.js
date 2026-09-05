@@ -225,17 +225,20 @@ function displayUsers() {
 
 
         [
-            user.idU,
-            user.userName,
-            user.fullName,
-            getRoleName(user.userRank)
-        ].forEach(value => {
+            ["ID", user.idU],
+            ["Felhasználónév", user.userName],
+            ["Teljes név", user.fullName],
+            ["Szerepkör", getRoleName(user.userRank)]
+        ].forEach(([label, value]) => {
             const cell = document.createElement("td");
+            cell.dataset.label = label;
             cell.textContent = value ?? "";
             row.appendChild(cell);
         });
 
         const actionsCell = document.createElement("td");
+        actionsCell.dataset.label = "Műveletek";
+        actionsCell.classList.add("text-end");
 
         [
             ["btn btn-sm btn-primary edit-user-button", "Szerkesztés"],
@@ -246,7 +249,35 @@ function displayUsers() {
             button.type = "button";
             button.className = className;
             button.dataset.id = user.idU;
-            button.textContent = label;
+
+            if (className.includes("edit-user-button")) {
+                button.setAttribute("aria-label", label);
+                button.title = label;
+
+                const editIcon = document.createElement("i");
+                editIcon.className = "bi bi-pencil";
+                editIcon.setAttribute("aria-hidden", "true");
+                button.appendChild(editIcon);
+            } else if (className.includes("delete-user-button")) {
+                button.setAttribute("aria-label", label);
+                button.title = label;
+
+                const deleteIcon = document.createElement("i");
+                deleteIcon.className = "bi bi-trash";
+                deleteIcon.setAttribute("aria-hidden", "true");
+                button.appendChild(deleteIcon);
+            } else if (className.includes("change-password-button")) {
+                button.setAttribute("aria-label", label);
+                button.title = label;
+
+                const keyIcon = document.createElement("i");
+                keyIcon.className = "bi bi-key";
+                keyIcon.setAttribute("aria-hidden", "true");
+                button.appendChild(keyIcon);
+            } else {
+                button.textContent = label;
+            }
+
             actionsCell.appendChild(button);
         });
 
