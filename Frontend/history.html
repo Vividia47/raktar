@@ -43,7 +43,7 @@
 
                 <div class="row g-2 mb-3">
 
-                    <div class="col-md-4">
+                    <div class="col-md-8">
                         <label for="history-search" class="form-label">
                             Keresés
                         </label>
@@ -53,28 +53,6 @@
                             class="form-control"
                             placeholder="Termék, felhasználó, bizonylatszám..."
                         >
-                    </div>
-
-                    <div class="col-md-2">
-                        <label for="history-product-filter" class="form-label">
-                            Termék
-                        </label>
-                        <select
-                            id="history-product-filter"
-                            class="form-select">
-                            <option value="">Mind</option>
-                        </select>
-                    </div>
-
-                    <div class="col-md-2">
-                        <label for="history-user-filter" class="form-label">
-                            Felhasználó
-                        </label>
-                        <select
-                            id="history-user-filter"
-                            class="form-select">
-                            <option value="">Mind</option>
-                        </select>
                     </div>
 
                     <div class="col-md-2">
@@ -118,18 +96,22 @@
 
                     <table class="table table-striped table-hover align-middle">
 
+                        <caption class="visually-hidden">
+                            A raktár készletmozgásainak története
+                        </caption>
+
                         <thead>
                             <tr>
-                                <th>ID</th>
-                                <th>Termék</th>
-                                <th>Felhasználó</th>
-                                <th>Dátum</th>
-                                <th>Bizonylatszám</th>
-                                <th>Mennyiség</th>
-                                <th>Mozgás típusa</th>
-                                <th>Beszerzési ár</th>
-                                <th>Eladási ár</th>
-                                <th>Sorozatszám</th>
+                                <th scope="col">ID</th>
+                                <th scope="col">Termék</th>
+                                <th scope="col">Felhasználó</th>
+                                <th scope="col">Dátum</th>
+                                <th scope="col">Bizonylatszám</th>
+                                <th scope="col">Mennyiség</th>
+                                <th scope="col">Mozgás típusa</th>
+                                <th scope="col">Beszerzési ár</th>
+                                <th scope="col">Eladási ár</th>
+                                <th scope="col">Sorozatszám</th>
                             </tr>
                         </thead>
 

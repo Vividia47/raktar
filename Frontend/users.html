@@ -45,10 +45,6 @@
 
             <div class="d-flex justify-content-between align-items-center mb-3">
 
-                <h2 class="h4 mb-0">
-                    Felhasználólista
-                </h2>
-
                 <button
     id="add-user-button"
     class="btn btn-primary"
@@ -63,7 +59,7 @@
 
     <div class="col-md-8">
 
-        <label class="form-label">
+        <label for="user-search" class="form-label">
             Keresés
         </label>
 
@@ -71,14 +67,14 @@
             type="text"
             id="user-search"
             class="form-control"
-            placeholder="Felhasználónév vagy teljes név">
+            placeholder="Felhasználónév, teljes név...">
 
     </div>
 
 
     <div class="col-md-4">
 
-        <label class="form-label">
+        <label for="user-role-filter" class="form-label">
             Szerepkör
         </label>
 
@@ -116,13 +112,17 @@
 
                 <table class="table table-striped table-hover align-middle">
 
+                    <caption class="visually-hidden">
+                        A rendszer felhasználóinak listája
+                    </caption>
+
                     <thead>
                         <tr>
-                            <th>ID</th>
-                            <th>Felhasználónév</th>
-                            <th>Teljes név</th>
-                            <th>Szerepkör</th>
-                            <th>Műveletek</th>
+                            <th scope="col">ID</th>
+                            <th scope="col">Felhasználónév</th>
+                            <th scope="col">Teljes név</th>
+                            <th scope="col">Szerepkör</th>
+                            <th scope="col">Műveletek</th>
                         </tr>
                     </thead>
 
@@ -140,12 +140,12 @@
 
 </div>
 
-<div class="modal fade" id="add-user-modal" tabindex="-1" aria-hidden="true">
+<div class="modal fade" id="add-user-modal" tabindex="-1" aria-hidden="true" aria-labelledby="add-user-modal-title">
     <div class="modal-dialog">
         <div class="modal-content">
 
             <div class="modal-header">
-                <h5 class="modal-title">Új felhasználó</h5>
+                <h5 id="add-user-modal-title" class="modal-title">Új felhasználó</h5>
 
                 <button
                     type="button"
@@ -165,7 +165,9 @@
                     <input
                         type="text"
                         id="add-user-name"
-                        class="form-control">
+                        class="form-control"
+                        autocomplete="username"
+                        required>
                 </div>
 
                 <div class="mb-3">
@@ -176,7 +178,9 @@
                     <input
                         type="text"
                         id="add-user-full-name"
-                        class="form-control">
+                        class="form-control"
+                        autocomplete="name"
+                        required>
                 </div>
 
                 <div class="mb-3">
@@ -187,7 +191,9 @@
                     <input
                         type="password"
                         id="add-user-password"
-                        class="form-control">
+                        class="form-control"
+                        autocomplete="new-password"
+                        required>
                 </div>
 
                 <div class="mb-3">
@@ -227,12 +233,12 @@
     </div>
 </div>
 
-<div class="modal fade" id="edit-user-modal" tabindex="-1" aria-hidden="true">
+<div class="modal fade" id="edit-user-modal" tabindex="-1" aria-hidden="true" aria-labelledby="edit-user-modal-title">
     <div class="modal-dialog">
         <div class="modal-content">
 
             <div class="modal-header">
-                <h5 class="modal-title">Felhasználó szerkesztése</h5>
+                <h5 id="edit-user-modal-title" class="modal-title">Felhasználó szerkesztése</h5>
 
                 <button
                     type="button"
@@ -252,7 +258,9 @@
                     <input
                         type="text"
                         id="edit-user-name"
-                        class="form-control">
+                        class="form-control"
+                        autocomplete="username"
+                        required>
                 </div>
 
                 <div class="mb-3">
@@ -263,7 +271,9 @@
                     <input
                         type="text"
                         id="edit-user-full-name"
-                        class="form-control">
+                        class="form-control"
+                        autocomplete="name"
+                        required>
                 </div>
 
                 <div class="mb-3">
@@ -304,12 +314,12 @@
 </div>
 
 <!-- Jelszó módosítása modal -->
-<div class="modal fade" id="change-user-password-modal" tabindex="-1" aria-hidden="true">
+<div class="modal fade" id="change-user-password-modal" tabindex="-1" aria-hidden="true" aria-labelledby="change-user-password-modal-title">
     <div class="modal-dialog">
         <div class="modal-content">
 
             <div class="modal-header">
-                <h5 class="modal-title">Jelszó módosítása</h5>
+                <h5 id="change-user-password-modal-title" class="modal-title">Jelszó módosítása</h5>
 
                 <button
                     type="button"
@@ -329,7 +339,9 @@
                     <input
                         type="password"
                         id="change-user-password"
-                        class="form-control">
+                        class="form-control"
+                        autocomplete="new-password"
+                        required>
                 </div>
 
                 <div class="mb-3">
@@ -340,7 +352,9 @@
                     <input
                         type="password"
                         id="change-user-password-confirm"
-                        class="form-control">
+                        class="form-control"
+                        autocomplete="new-password"
+                        required>
                 </div>
 
             </div>

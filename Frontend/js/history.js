@@ -24,36 +24,7 @@ try {
 
 function populateFilters() {
 
-const productFilter = document.getElementById("history-product-filter");
-const userFilter = document.getElementById("history-user-filter");
 const movementFilter = document.getElementById("history-movement-filter");
-
-productFilter.innerHTML = `<option value="">Mind</option>`;
-
-allProducts.forEach(product => {
-
-    const option = document.createElement("option");
-
-    option.value = product.idP;
-    option.textContent = product.name ?? `ID: ${product.idP}`;
-
-    productFilter.appendChild(option);
-
-});
-
-
-userFilter.innerHTML = `<option value="">Mind</option>`;
-
-allUsers.forEach(user => {
-
-    const option = document.createElement("option");
-
-    option.value = user.idU;
-    option.textContent = user.fullName ?? `ID: ${user.idU}`;
-
-    userFilter.appendChild(option);
-
-});
 
 const movementTypes = {
 
@@ -95,12 +66,6 @@ const search = document
     .toLowerCase()
     .trim();
 
-const productFilter =
-    document.getElementById("history-product-filter").value;
-
-const userFilter =
-    document.getElementById("history-user-filter").value;
-
 const movementFilter =
     document.getElementById("history-movement-filter").value;
 
@@ -135,16 +100,6 @@ let filteredHistory = allHistory.filter(record => {
         searchText.includes(search);
 
 
-    const matchesProduct =
-        productFilter === "" ||
-        record.idP == productFilter;
-
-
-    const matchesUser =
-        userFilter === "" ||
-        record.idU == userFilter;
-
-
     const matchesMovement =
         movementFilter === "" ||
         record.direction == movementFilter;
@@ -152,8 +107,6 @@ let filteredHistory = allHistory.filter(record => {
 
     return (
         matchesSearch &&
-        matchesProduct &&
-        matchesUser &&
         matchesMovement
     );
 
@@ -266,16 +219,6 @@ document.getElementById("history-search").addEventListener(
 displayHistory
 );
 
-document.getElementById("history-product-filter").addEventListener(
-"change",
-displayHistory
-);
-
-document.getElementById("history-user-filter").addEventListener(
-"change",
-displayHistory
-);
-
 document.getElementById("history-movement-filter").addEventListener(
 "change",
 displayHistory
@@ -291,10 +234,6 @@ document.getElementById("history-clear-filters").addEventListener(
 function () {
 
     document.getElementById("history-search").value = "";
-
-    document.getElementById("history-product-filter").value = "";
-
-    document.getElementById("history-user-filter").value = "";
 
     document.getElementById("history-movement-filter").value = "";
 
