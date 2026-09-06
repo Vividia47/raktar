@@ -79,13 +79,22 @@
                                             Jelszó
                                         </label>
 
-                                        <input
-                                            type="password"
-                                            class="form-control"
-                                            id="register-password"
-                                            autocomplete="new-password"
-                                            required
-                                        >
+                                        <div class="input-group">
+                                            <input
+                                                type="password"
+                                                class="form-control"
+                                                id="register-password"
+                                                autocomplete="new-password"
+                                                required
+                                            >
+                                            <button
+                                                type="button"
+                                                class="btn btn-outline-secondary password-toggle"
+                                                data-password-target="register-password"
+                                                aria-label="Jelszó megjelenítése">
+                                                <i class="bi bi-eye" aria-hidden="true"></i>
+                                            </button>
+                                        </div>
                                     </div>
 
                                     <div class="mb-3">
@@ -93,13 +102,22 @@
                                             Jelszó megerősítése
                                         </label>
 
-                                        <input
-                                            type="password"
-                                            class="form-control"
-                                            id="register-password-confirm"
-                                            autocomplete="new-password"
-                                            required
-                                        >
+                                        <div class="input-group">
+                                            <input
+                                                type="password"
+                                                class="form-control"
+                                                id="register-password-confirm"
+                                                autocomplete="new-password"
+                                                required
+                                            >
+                                            <button
+                                                type="button"
+                                                class="btn btn-outline-secondary password-toggle"
+                                                data-password-target="register-password-confirm"
+                                                aria-label="Jelszó megjelenítése">
+                                                <i class="bi bi-eye" aria-hidden="true"></i>
+                                            </button>
+                                        </div>
                                     </div>
 
                                     <button
@@ -140,13 +158,22 @@
                                             Jelszó
                                         </label>
 
-                                        <input
-                                            type="password"
-                                            class="form-control"
-                                            id="password"
-                                            autocomplete="current-password"
-                                            required
-                                        >
+                                        <div class="input-group">
+                                            <input
+                                                type="password"
+                                                class="form-control"
+                                                id="password"
+                                                autocomplete="current-password"
+                                                required
+                                            >
+                                            <button
+                                                type="button"
+                                                class="btn btn-outline-secondary password-toggle"
+                                                data-password-target="password"
+                                                aria-label="Jelszó megjelenítése">
+                                                <i class="bi bi-eye" aria-hidden="true"></i>
+                                            </button>
+                                        </div>
                                     </div>
 
                                     <button
@@ -350,12 +377,21 @@
                             Jelenlegi jelszó
                         </label>
 
-                        <input
-                            type="password"
-                            id="current-password"
-                            class="form-control"
-                            autocomplete="current-password"
-                            required>
+                        <div class="input-group">
+                            <input
+                                type="password"
+                                id="current-password"
+                                class="form-control"
+                                autocomplete="current-password"
+                                required>
+                            <button
+                                type="button"
+                                class="btn btn-outline-secondary password-toggle"
+                                data-password-target="current-password"
+                                aria-label="Jelszó megjelenítése">
+                                <i class="bi bi-eye" aria-hidden="true"></i>
+                            </button>
+                        </div>
                     </div>
 
                     <div class="mb-3">
@@ -365,12 +401,21 @@
                             Új jelszó
                         </label>
 
-                        <input
-                            type="password"
-                            id="new-password"
-                            class="form-control"
-                            autocomplete="new-password"
-                            required>
+                        <div class="input-group">
+                            <input
+                                type="password"
+                                id="new-password"
+                                class="form-control"
+                                autocomplete="new-password"
+                                required>
+                            <button
+                                type="button"
+                                class="btn btn-outline-secondary password-toggle"
+                                data-password-target="new-password"
+                                aria-label="Jelszó megjelenítése">
+                                <i class="bi bi-eye" aria-hidden="true"></i>
+                            </button>
+                        </div>
                     </div>
 
                     <div class="mb-3">
@@ -380,12 +425,21 @@
                             Új jelszó újra
                         </label>
 
-                        <input
-                            type="password"
-                            id="confirm-password"
-                            class="form-control"
-                            autocomplete="new-password"
-                            required>
+                        <div class="input-group">
+                            <input
+                                type="password"
+                                id="confirm-password"
+                                class="form-control"
+                                autocomplete="new-password"
+                                required>
+                            <button
+                                type="button"
+                                class="btn btn-outline-secondary password-toggle"
+                                data-password-target="confirm-password"
+                                aria-label="Jelszó megjelenítése">
+                                <i class="bi bi-eye" aria-hidden="true"></i>
+                            </button>
+                        </div>
                     </div>
 
                     <button

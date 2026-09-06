@@ -1,5 +1,28 @@
 const API_BASE_URL = "http://localhost:5282";
 
+function initializePasswordToggles() {
+    document.querySelectorAll(".password-toggle").forEach(toggle => {
+        toggle.addEventListener("click", function () {
+            const input = document.getElementById(toggle.dataset.passwordTarget);
+            const icon = toggle.querySelector("i");
+
+            if (!input || !icon) {
+                return;
+            }
+
+            const isVisible = input.type === "text";
+            input.type = isVisible ? "password" : "text";
+            icon.className = isVisible ? "bi bi-eye" : "bi bi-eye-slash";
+            toggle.setAttribute(
+                "aria-label",
+                isVisible ? "Jelszó megjelenítése" : "Jelszó elrejtése"
+            );
+        });
+    });
+}
+
+initializePasswordToggles();
+
 async function getUsers(userId) {
     const response = await fetch(
         `${API_BASE_URL}/user?userId=${userId}`
