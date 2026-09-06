@@ -1,7 +1,12 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 using WarehouseAPI.Models;
 using WarehouseAPI.Models.DTOs;
 using WarehouseAPI.DTOs;
@@ -10,21 +15,33 @@ namespace WarehouseAPI.Controllers
 {
     [Route("user")]
     [ApiController]
+    [Authorize]
     public class UserController : ControllerBase
     {
         private readonly WarehouseContext _warehouseContext;
         private readonly PasswordHasher<User> _passwordHasher = new();
+        private readonly IConfiguration _configuration;
 
-        public UserController(WarehouseContext warehouseContext)
+        public UserController(
+            WarehouseContext warehouseContext,
+            IConfiguration configuration)
         {
             _warehouseContext = warehouseContext;
+            _configuration = configuration;
         }
 
         [HttpPost]
+        [AllowAnonymous]
         public async Task<ActionResult> AddNewUser(AddUserDto addUserDto)
         {
             try
             {
+                if (await _warehouseContext.Users.AnyAsync() &&
+                    (!User.Identity?.IsAuthenticated ?? true || !User.IsInRole("1")))
+                {
+                    return Forbid();
+                }
+
                 var user = new User
                 {
                     UserName = addUserDto.UserName,
@@ -59,6 +76,7 @@ namespace WarehouseAPI.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "1")]
 public async Task<ActionResult> GetAllUsers([FromQuery] int userId)
         {
             try
@@ -98,6 +116,7 @@ if (user.UserRank != 1)
         }
 
         [HttpGet("names")]
+        [Authorize]
 public async Task<ActionResult> GetUserNames()
 {
     try
@@ -126,6 +145,7 @@ public async Task<ActionResult> GetUserNames()
 }
 
         [HttpGet("exists")]
+        [AllowAnonymous]
 public async Task<ActionResult> UsersExist()
 {
     try
@@ -147,6 +167,7 @@ public async Task<ActionResult> UsersExist()
 }
 
         [HttpGet("byid")]
+        [Authorize]
         public async Task<ActionResult> GetUserByID(int id)
         {
             try
@@ -166,6 +187,7 @@ public async Task<ActionResult> UsersExist()
         }
 
         [HttpPut]
+        [Authorize(Roles = "1")]
 public async Task<ActionResult> UpdateUser(
     [FromQuery] int id,
     [FromBody] UpdateUserDto updateUserDto)
@@ -220,6 +242,7 @@ public async Task<ActionResult> UpdateUser(
     }
 }
         [HttpDelete]
+        [Authorize(Roles = "1")]
 public async Task<ActionResult> DeleteUser(
     [FromQuery] int id,
     [FromQuery] int userId)
@@ -289,6 +312,7 @@ public async Task<ActionResult> DeleteUser(
 }
 
         [HttpPost("login")]
+        [AllowAnonymous]
         public IActionResult Login(LoginDto login)
         {
             var user = _warehouseContext.Users.FirstOrDefault(u =>
@@ -319,11 +343,13 @@ public async Task<ActionResult> DeleteUser(
             return Ok(new
             {
                 message = "Sikeres bejelentkezés.",
-                result = ToResponse(user)
+                result = ToResponse(user),
+                token = CreateToken(user)
             });
         }
 
         [HttpPut("change-password")]
+        [Authorize]
 public async Task<ActionResult> ChangePassword(
     [FromQuery] int id,
     [FromBody] ChangePasswordDto changePasswordDto)
@@ -384,6 +410,7 @@ public async Task<ActionResult> ChangePassword(
 }
 
 [HttpPut("change-password-manager")]
+    [Authorize(Roles = "1")]
 public async Task<ActionResult> ChangeUserPassword(
     [FromQuery] int id,
     [FromQuery] int userId,
@@ -460,6 +487,34 @@ public async Task<ActionResult> ChangeUserPassword(
             FullName = user.FullName,
             UserRank = user.UserRank
         };
+    }
+
+    private string CreateToken(User user)
+    {
+        var claims = new[]
+        {
+            new Claim(JwtRegisteredClaimNames.Sub, user.IdU.ToString()),
+            new Claim(ClaimTypes.NameIdentifier, user.IdU.ToString()),
+            new Claim(ClaimTypes.Name, user.UserName ?? string.Empty),
+            new Claim(ClaimTypes.Role, (user.UserRank ?? 0).ToString())
+        };
+
+        var key = new SymmetricSecurityKey(
+            Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]!));
+        var credentials = new SigningCredentials(
+            key,
+            SecurityAlgorithms.HmacSha256);
+        var expirationMinutes = _configuration.GetValue<int?>(
+            "Jwt:ExpirationMinutes") ?? 60;
+
+        var token = new JwtSecurityToken(
+            issuer: _configuration["Jwt:Issuer"],
+            audience: _configuration["Jwt:Audience"],
+            claims: claims,
+            expires: DateTime.UtcNow.AddMinutes(expirationMinutes),
+            signingCredentials: credentials);
+
+        return new JwtSecurityTokenHandler().WriteToken(token);
     }
 }
 

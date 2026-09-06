@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
@@ -9,6 +10,7 @@ namespace WarehouseAPI.Controllers
 {
     [Route("goods")]
     [ApiController]
+    [Authorize]
     public class GoodsController : ControllerBase
     {
         private readonly WarehouseContext _warehousecontext;
@@ -19,6 +21,7 @@ namespace WarehouseAPI.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "1,2")]
 public async Task<ActionResult> AddNewGoods(
     [FromQuery] int userId,
     [FromBody] AddGoodsDto addGoodsDto)
@@ -108,6 +111,7 @@ var user = await _warehousecontext.Users
         }
 
         [HttpPut]
+        [Authorize(Roles = "1,2")]
 public async Task<ActionResult> UpdateGoods(
     [FromQuery] int id,
     [FromQuery] int userId,
@@ -160,6 +164,7 @@ if (user.UserRank != 1 && user.UserRank != 2)
         }
 
         [HttpPut("price")]
+        [Authorize(Roles = "1,3")]
 public async Task<ActionResult> UpdateSellingPrice(
     [FromQuery] int id,
     [FromQuery] int userId,
@@ -216,6 +221,7 @@ if (user.UserRank != 1 && user.UserRank != 3)
 }
 
         [HttpDelete]
+        [Authorize(Roles = "1,2")]
 public async Task<ActionResult> DeleteGoods(
     [FromQuery] int id,
     [FromQuery] int userId)
@@ -296,6 +302,7 @@ if (user.UserRank != 1 && user.UserRank != 2)
         }
 
         [HttpPut("movement")]
+        [Authorize(Roles = "1,2")]
         public async Task<ActionResult> MovementGoods([FromQuery] int id, [FromBody] MovementGoodsDto movementGoodsDto)
         {
             try

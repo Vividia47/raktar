@@ -1,5 +1,8 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Scalar.AspNetCore;
+using System.Text;
 using WarehouseAPI.Models;
 
 namespace WarehouseAPI
@@ -25,6 +28,32 @@ namespace WarehouseAPI
             // Add services to the container.
 
             builder.Services.AddControllers();
+            var jwtKey = builder.Configuration["Jwt:Key"];
+
+            if (string.IsNullOrWhiteSpace(jwtKey) || jwtKey.Length < 32)
+            {
+                throw new InvalidOperationException(
+                    "Jwt:Key must be configured and contain at least 32 characters.");
+            }
+
+            builder.Services
+                .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidateLifetime = true,
+                        ValidateIssuerSigningKey = true,
+                        ValidIssuer = builder.Configuration["Jwt:Issuer"],
+                        ValidAudience = builder.Configuration["Jwt:Audience"],
+                        IssuerSigningKey = new SymmetricSecurityKey(
+                            Encoding.UTF8.GetBytes(jwtKey))
+                    };
+                });
+
+            builder.Services.AddAuthorization();
             builder.Services.AddCors(options =>
             {
                 options.AddPolicy("Frontend", policy =>
@@ -50,6 +79,7 @@ namespace WarehouseAPI
             app.UseHttpsRedirection();
             app.UseCors("Frontend");
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
 

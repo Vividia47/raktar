@@ -149,6 +149,7 @@ document.getElementById("login-form").addEventListener("submit", async function 
             return;
         }
 
+localStorage.setItem("accessToken", data.token);
 localStorage.setItem("loggedInUser", JSON.stringify(data.result));
 
 document.getElementById("auth-section").classList.add("d-none");
@@ -166,6 +167,7 @@ updateDashboard();
 
 document.getElementById("logout-button").addEventListener("click", function () {
     localStorage.removeItem("loggedInUser");
+    localStorage.removeItem("accessToken");
 
     document.getElementById("dashboard-section").classList.add("d-none");
     document.getElementById("auth-section").classList.remove("d-none");
@@ -228,6 +230,7 @@ document.getElementById("change-password-form").addEventListener("submit", async
         showNotification("Sikeres jelszómódosítás! Kérjük, jelentkezzen be újra.", "success");
 
         localStorage.removeItem("loggedInUser");
+        localStorage.removeItem("accessToken");
 
         window.location.href = "index.html";
 
