@@ -86,6 +86,9 @@ document.getElementById("register-form").addEventListener("submit", async functi
         return;
     }
 
+    const submitButton = event.submitter;
+    setButtonLoading(submitButton, true);
+
     try {
         const response = await fetch(`${API_BASE_URL}/user`, {
             method: "POST",
@@ -113,6 +116,8 @@ document.getElementById("register-form").addEventListener("submit", async functi
     } catch (error) {
         console.error(error);
         showNotification("Hiba történt a fiók létrehozása során.", "danger");
+    } finally {
+        setButtonLoading(submitButton, false);
     }
 });
 
@@ -121,6 +126,9 @@ document.getElementById("login-form").addEventListener("submit", async function 
 
     const username = document.getElementById("username").value;
     const password = document.getElementById("password").value;
+    const submitButton = event.submitter;
+
+    setButtonLoading(submitButton, true);
 
     try {
         const response = await fetch(`${API_BASE_URL}/user/login`, {
@@ -151,6 +159,8 @@ updateDashboard();
     } catch (error) {
         console.error(error);
         showNotification("Hiba történt a bejelentkezés során.", "danger");
+    } finally {
+        setButtonLoading(submitButton, false);
     }
 });
 
@@ -209,6 +219,9 @@ document.getElementById("change-password-form").addEventListener("submit", async
         confirmPassword: document.getElementById("confirm-password").value
     };
 
+    const submitButton = event.submitter;
+    setButtonLoading(submitButton, true);
+
     try {
         await changePassword(user.idU, passwordData);
 
@@ -221,5 +234,7 @@ document.getElementById("change-password-form").addEventListener("submit", async
     } catch (error) {
         console.error(error);
         showNotification(error.message, "danger");
+    } finally {
+        setButtonLoading(submitButton, false);
     }
 });

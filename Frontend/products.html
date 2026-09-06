@@ -71,12 +71,17 @@
             Keresés
         </label>
 
-        <input
-            type="text"
-            id="product-search"
-            class="form-control"
-            placeholder="Név, cikkszám, vonalkód..."
-        >
+        <div class="input-group">
+            <span class="input-group-text search-icon" aria-hidden="true">
+                <i class="bi bi-search"></i>
+            </span>
+            <input
+                type="text"
+                id="product-search"
+                class="form-control"
+                placeholder="Név, cikkszám, vonalkód..."
+            >
+        </div>
     </div>
 
 
@@ -146,6 +151,7 @@
         id="product-clear-filters"
         class="btn btn-outline-secondary">
 
+        <i class="bi bi-funnel me-1" aria-hidden="true"></i>
         Szűrők törlése
 
     </button>
@@ -462,7 +468,7 @@
 
                         <div class="mb-3">
     <label for="edit-product-sprice" class="form-label">
-        Eladási ár
+        Eladási ár (Ft)
     </label>
 
     <input

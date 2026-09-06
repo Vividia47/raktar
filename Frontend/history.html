@@ -55,12 +55,17 @@
                         <label for="history-search" class="form-label">
                             Keresés
                         </label>
-                        <input
-                            type="text"
-                            id="history-search"
-                            class="form-control"
-                            placeholder="Termék, felhasználó, bizonylatszám..."
-                        >
+                        <div class="input-group">
+                            <span class="input-group-text search-icon" aria-hidden="true">
+                                <i class="bi bi-search"></i>
+                            </span>
+                            <input
+                                type="text"
+                                id="history-search"
+                                class="form-control"
+                                placeholder="Termék, felhasználó, bizonylatszám..."
+                            >
+                        </div>
                     </div>
 
                     <div class="col-md-2">
@@ -92,6 +97,7 @@
                     <button
                         id="history-clear-filters"
                         class="btn btn-outline-secondary">
+                        <i class="bi bi-funnel me-1" aria-hidden="true"></i>
                         Szűrők törlése
                     </button>
                 </div>

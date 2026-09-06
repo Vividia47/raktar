@@ -23,6 +23,84 @@ function initializePasswordToggles() {
 
 initializePasswordToggles();
 
+function showTableLoading(tableBody, columnCount, rowCount = 4) {
+    tableBody.innerHTML = "";
+
+    for (let index = 0; index < rowCount; index += 1) {
+        const row = document.createElement("tr");
+        const cell = document.createElement("td");
+        cell.colSpan = columnCount;
+        cell.className = "table-loading-cell";
+
+        const skeleton = document.createElement("div");
+        skeleton.className = "skeleton-line";
+        skeleton.setAttribute("aria-hidden", "true");
+        cell.appendChild(skeleton);
+        row.appendChild(cell);
+        tableBody.appendChild(row);
+    }
+}
+
+function showTableError(tableBody, columnCount, message, retryCallback) {
+    tableBody.innerHTML = "";
+
+    const row = document.createElement("tr");
+    const cell = document.createElement("td");
+    cell.colSpan = columnCount;
+    cell.className = "text-center table-error-cell py-4";
+
+    const text = document.createElement("p");
+    text.className = "mb-3";
+    text.textContent = message;
+
+    const retryButton = document.createElement("button");
+    retryButton.type = "button";
+    retryButton.className = "btn btn-primary btn-sm";
+    retryButton.innerHTML = '<i class="bi bi-arrow-clockwise" aria-hidden="true"></i> Újrapróbálás';
+    retryButton.addEventListener("click", retryCallback);
+
+    cell.appendChild(text);
+    cell.appendChild(retryButton);
+    row.appendChild(cell);
+    tableBody.appendChild(row);
+}
+
+function setButtonLoading(button, isLoading) {
+    if (!button) {
+        return;
+    }
+
+    if (isLoading) {
+        button.disabled = true;
+        button.dataset.originalContent = button.innerHTML;
+        button.dataset.originalAriaLabel = button.getAttribute("aria-label") || "";
+        button.dataset.originalTitle = button.getAttribute("title") || "";
+        button.innerHTML = '<i class="bi bi-three-dots button-loading-icon" aria-hidden="true"></i>';
+        button.setAttribute("aria-label", "Mentés folyamatban");
+        button.setAttribute("title", "Mentés folyamatban");
+        return;
+    }
+
+    button.disabled = false;
+    button.innerHTML = button.dataset.originalContent || button.innerHTML;
+
+    if (button.dataset.originalAriaLabel) {
+        button.setAttribute("aria-label", button.dataset.originalAriaLabel);
+    } else {
+        button.removeAttribute("aria-label");
+    }
+
+    if (button.dataset.originalTitle) {
+        button.setAttribute("title", button.dataset.originalTitle);
+    } else {
+        button.removeAttribute("title");
+    }
+
+    delete button.dataset.originalContent;
+    delete button.dataset.originalAriaLabel;
+    delete button.dataset.originalTitle;
+}
+
 async function getUsers(userId) {
     const response = await fetch(
         `${API_BASE_URL}/user?userId=${userId}`
@@ -338,3 +416,27 @@ function navigateBack() {
 
     window.location.href = "index.html";
 }
+
+function initializeModalFocusManagement() {
+    document.querySelectorAll(".modal").forEach(modal => {
+        modal.addEventListener("show.bs.modal", function () {
+            const activeElement = document.activeElement;
+
+            if (activeElement && !modal.contains(activeElement)) {
+                modal._returnFocusElement = activeElement;
+            }
+        });
+
+        modal.addEventListener("hidden.bs.modal", function () {
+            const returnFocusElement = modal._returnFocusElement;
+
+            if (returnFocusElement && document.contains(returnFocusElement)) {
+                returnFocusElement.focus();
+            }
+
+            modal._returnFocusElement = null;
+        });
+    });
+}
+
+initializeModalFocusManagement();

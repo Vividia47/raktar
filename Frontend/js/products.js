@@ -2,6 +2,9 @@ let allProducts = [];
 let pendingDeleteProductId = null;
 
 async function loadProducts() {
+    const tableBody = document.getElementById("products-table-body");
+    showTableLoading(tableBody, 15);
+
     try {
         allProducts = await getGoods();
 
@@ -15,6 +18,12 @@ async function loadProducts() {
 
     } catch (error) {
         console.error(error);
+        showTableError(
+            tableBody,
+            15,
+            "Nem sikerült betölteni a termékeket.",
+            loadProducts
+        );
         showNotification("Nem sikerült betölteni a termékeket.", "danger");
     }
 }
@@ -154,7 +163,20 @@ function displayProducts() {
         ].forEach(([label, value]) => {
             const cell = document.createElement("td");
             cell.dataset.label = label;
-            cell.textContent = value;
+
+            let displayValue = value;
+
+            if (value !== "" && value !== null && value !== undefined) {
+                if (label === "Beszerzési ár" || label === "Eladási ár") {
+                    displayValue = `${value} Ft`;
+                    cell.classList.add("numeric-with-unit");
+                } else if (label === "ÁFA") {
+                    displayValue = `${value}%`;
+                    cell.classList.add("numeric-with-unit");
+                }
+            }
+
+            cell.textContent = displayValue;
 
             if (label === "Rendelendő mennyiség" && value > 0) {
                 const warningIcon = document.createElement("i");
@@ -290,6 +312,9 @@ document
 
         event.preventDefault();
 
+        const submitButton = event.submitter;
+        setButtonLoading(submitButton, true);
+
 
         const product = {
 
@@ -361,6 +386,9 @@ document
             console.error(error);
 
             showNotification(error.message, "danger");
+
+        } finally {
+            setButtonLoading(submitButton, false);
 
         }
 
@@ -531,6 +559,9 @@ document
 
         event.preventDefault();
 
+        const submitButton = event.submitter;
+        setButtonLoading(submitButton, true);
+
 
 
         const productId = this.dataset.id;
@@ -688,6 +719,9 @@ document
 
 
             showNotification(error.message, "danger");
+
+        } finally {
+            setButtonLoading(submitButton, false);
 
 
         }

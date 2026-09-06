@@ -20,12 +20,43 @@ body.bg-light {
     background-color: #fff6ea;
 }
 
+.search-icon {
+    color: #685f57;
+    background-color: #fff6ea;
+    border-color: #d4c7b0;
+}
+
 .table {
     --bs-table-color: #302b28;
     --bs-table-bg: #f5ecdb;
     --bs-table-striped-bg: #fff6ea;
     --bs-table-hover-bg: #f1e2cb;
     --bs-table-border-color: #d4c7b0;
+}
+
+.table-loading-cell,
+.table-error-cell {
+    background-color: #f5ecdb !important;
+}
+
+.skeleton-line {
+    width: 70%;
+    height: 1rem;
+    margin: 0.35rem auto;
+    border-radius: 0.25rem;
+    background: linear-gradient(90deg, #eadcc8 25%, #fff6ea 50%, #eadcc8 75%);
+    background-size: 200% 100%;
+    animation: skeleton-shimmer 1.5s ease-in-out infinite;
+}
+
+@keyframes skeleton-shimmer {
+    from {
+        background-position: 200% 0;
+    }
+
+    to {
+        background-position: -200% 0;
+    }
 }
 
 .btn-primary {
@@ -117,8 +148,17 @@ body.bg-light {
     margin-bottom: 0.75rem;
 }
 
+.button-loading-icon {
+    font-size: 1.1em;
+    letter-spacing: 0.1em;
+}
+
 .mobile-card-table td {
     vertical-align: middle;
+}
+
+.numeric-with-unit {
+    white-space: nowrap;
 }
 
 .mobile-card-table td.text-end {
@@ -296,4 +336,15 @@ body.bg-light {
 
 .low-stock td {
     color: #6f3029;
+}
+
+:focus-visible {
+    outline: 3px solid #2f8f83;
+    outline-offset: 2px;
+}
+
+.btn:focus-visible,
+.form-control:focus-visible,
+.form-select:focus-visible {
+    box-shadow: 0 0 0 0.2rem rgba(47, 143, 131, 0.3);
 }

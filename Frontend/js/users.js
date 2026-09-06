@@ -4,6 +4,8 @@ let pendingDeleteUserId = null;
 let allUsers = [];
 
 async function loadUsers() {
+    const tableBody = document.getElementById("users-table-body");
+    showTableLoading(tableBody, 5);
 
     try {
 
@@ -21,14 +23,22 @@ async function loadUsers() {
 
         console.error(error);
 
+        showTableError(
+            tableBody,
+            5,
+            "Nem sikerült betölteni a felhasználókat.",
+            loadUsers
+        );
         showNotification("Nem sikerült betölteni a felhasználókat.", "danger");
 
     }
 }
 
-document.getElementById("save-edit-user-button").addEventListener("click", async function () {
+document.getElementById("edit-user-form").addEventListener("submit", async function (event) {
+    event.preventDefault();
 
     const userId = editingUserId;
+    const saveButton = event.submitter;
 
     if (!userId) {
         return;
@@ -39,6 +49,8 @@ document.getElementById("save-edit-user-button").addEventListener("click", async
         fullName: document.getElementById("edit-user-full-name").value,
         userRank: Number(document.getElementById("edit-user-rank").value)
     };
+
+    setButtonLoading(saveButton, true);
 
     try {
 
@@ -58,6 +70,8 @@ document.getElementById("save-edit-user-button").addEventListener("click", async
 
         console.error(error);
         showNotification(error.message, "danger");
+    } finally {
+        setButtonLoading(saveButton, false);
     }
 });
 
@@ -81,8 +95,10 @@ document.getElementById("users-table-body").addEventListener("click", function (
     modal.show();
 });
 
-document.getElementById("save-user-password-button").addEventListener("click", async function () {
+document.getElementById("change-user-password-form").addEventListener("submit", async function (event) {
+    event.preventDefault();
 
+    const saveButton = event.submitter;
     const newPassword = document.getElementById("change-user-password").value;
     const confirmPassword = document.getElementById("change-user-password-confirm").value;
 
@@ -97,6 +113,7 @@ document.getElementById("save-user-password-button").addEventListener("click", a
     }
 
     const currentUser = getLoggedInUser();
+    setButtonLoading(saveButton, true);
 
     try {
 
@@ -121,6 +138,8 @@ document.getElementById("save-user-password-button").addEventListener("click", a
 
         console.error(error);
         showNotification(error.message, "danger");
+    } finally {
+        setButtonLoading(saveButton, false);
     }
 });
 
@@ -315,14 +334,18 @@ function getRoleName(rank) {
     return roles[rank] || "Ismeretlen";
 }
 
-document.getElementById("save-user-button").addEventListener("click", async function () {
+document.getElementById("add-user-form").addEventListener("submit", async function (event) {
+    event.preventDefault();
 
+    const saveButton = event.submitter;
     const user = {
         userName: document.getElementById("add-user-name").value,
         fullName: document.getElementById("add-user-full-name").value,
         password: document.getElementById("add-user-password").value,
         userRank: Number(document.getElementById("add-user-rank").value)
     };
+
+    setButtonLoading(saveButton, true);
 
     try {
 
@@ -342,6 +365,8 @@ document.getElementById("save-user-button").addEventListener("click", async func
 
         console.error(error);
         showNotification("Nem sikerült létrehozni a felhasználót.", "danger");
+    } finally {
+        setButtonLoading(saveButton, false);
     }
 });
 

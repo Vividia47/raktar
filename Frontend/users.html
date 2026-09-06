@@ -72,11 +72,16 @@
             Keresés
         </label>
 
-        <input
-            type="text"
-            id="user-search"
-            class="form-control"
-            placeholder="Felhasználónév, teljes név...">
+        <div class="input-group">
+            <span class="input-group-text search-icon" aria-hidden="true">
+                <i class="bi bi-search"></i>
+            </span>
+            <input
+                type="text"
+                id="user-search"
+                class="form-control"
+                placeholder="Felhasználónév, teljes név...">
+        </div>
 
     </div>
 
@@ -122,6 +127,7 @@
                     id="user-clear-filters"
                     type="button"
                     class="btn btn-outline-secondary">
+                    <i class="bi bi-funnel me-1" aria-hidden="true"></i>
                     Szűrők törlése
                 </button>
             </div>
@@ -176,6 +182,8 @@
                     aria-label="Bezárás">
                 </button>
             </div>
+
+            <form id="add-user-form">
 
             <div class="modal-body">
 
@@ -252,13 +260,15 @@
                 </button>
 
                 <button
-                    type="button"
+                    type="submit"
                     id="save-user-button"
                     class="btn btn-primary">
                     Mentés
                 </button>
 
             </div>
+
+            </form>
 
         </div>
     </div>
@@ -278,6 +288,8 @@
                     aria-label="Bezárás">
                 </button>
             </div>
+
+            <form id="edit-user-form">
 
             <div class="modal-body">
 
@@ -332,13 +344,15 @@
                 </button>
 
                 <button
-                    type="button"
+                    type="submit"
                     id="save-edit-user-button"
                     class="btn btn-primary">
                     Mentés
                 </button>
 
             </div>
+
+            </form>
 
         </div>
     </div>
@@ -359,6 +373,8 @@
                     aria-label="Bezárás">
                 </button>
             </div>
+
+            <form id="change-user-password-form">
 
             <div class="modal-body">
 
@@ -418,13 +434,15 @@
                 </button>
 
                 <button
-                    type="button"
+                    type="submit"
                     id="save-user-password-button"
                     class="btn btn-primary">
                     Mentés
                 </button>
 
             </div>
+
+            </form>
 
         </div>
     </div>

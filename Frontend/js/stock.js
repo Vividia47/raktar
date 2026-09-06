@@ -46,6 +46,9 @@ document.getElementById("movement-form").addEventListener("submit", async functi
         serialNr: document.getElementById("movement-serial").value
     };
 
+    const submitButton = event.submitter;
+    setButtonLoading(submitButton, true);
+
     try {
         await movementGoods(productId, movement);
 
@@ -56,6 +59,8 @@ document.getElementById("movement-form").addEventListener("submit", async functi
     } catch (error) {
         console.error(error);
         showNotification(error.message, "danger");
+    } finally {
+        setButtonLoading(submitButton, false);
     }
 });
 

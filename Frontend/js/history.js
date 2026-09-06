@@ -4,6 +4,9 @@ let allUsers = [];
 
 async function loadHistory() {
 
+const tableBody = document.getElementById("history-table-body");
+showTableLoading(tableBody, 10);
+
 try {
 
     allHistory = await getHistory();
@@ -16,6 +19,12 @@ try {
 } catch (error) {
 
     console.error(error);
+    showTableError(
+        tableBody,
+        10,
+        error.message || "Nem sikerült betölteni az előzményeket.",
+        loadHistory
+    );
     showNotification(error.message, "danger");
 
 }
@@ -175,7 +184,20 @@ filteredHistory.forEach(record => {
     ].forEach(([label, value]) => {
         const cell = document.createElement("td");
         cell.dataset.label = label;
-        cell.textContent = value;
+
+        let displayValue = value;
+
+        if (
+            value !== "" &&
+            value !== null &&
+            value !== undefined &&
+            (label === "Beszerzési ár" || label === "Eladási ár")
+        ) {
+            displayValue = `${value} Ft`;
+            cell.classList.add("numeric-with-unit");
+        }
+
+        cell.textContent = displayValue;
         row.appendChild(cell);
     });
 
