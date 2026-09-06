@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WarehouseAPI.Models;
@@ -12,6 +13,7 @@ namespace WarehouseAPI.Controllers
     public class UserController : ControllerBase
     {
         private readonly WarehouseContext _warehouseContext;
+        private readonly PasswordHasher<User> _passwordHasher = new();
 
         public UserController(WarehouseContext warehouseContext)
         {
@@ -27,16 +29,24 @@ namespace WarehouseAPI.Controllers
                 {
                     UserName = addUserDto.UserName,
                     FullName = addUserDto.FullName,
-                    Password = addUserDto.Password,
                     UserRank = addUserDto.UserRank
                 };
+
+                user.PasswordHash = _passwordHasher.HashPassword(
+                    user,
+                    addUserDto.Password!
+                );
 
                 if (user != null)
                 {
                     await _warehouseContext.Users.AddAsync(user);
                     await _warehouseContext.SaveChangesAsync();
 
-                    return StatusCode(201, new { message = "Sikeres felvétel.", result = user });
+                    return StatusCode(201, new
+                    {
+                        message = "Sikeres felvétel.",
+                        result = ToResponse(user)
+                    });
                 }
 
                 return StatusCode(404, new { message = "Sikertelen felvétel.", result = user });
@@ -69,7 +79,17 @@ if (user.UserRank != 1)
 {
     return Forbid();
 }
-                return Ok(new { message = "Sikeres lekérdezés", result = await _warehouseContext.Users.ToListAsync() });
+                var users = await _warehouseContext.Users
+                    .Select(user => new UserResponseDto
+                    {
+                        IdU = user.IdU,
+                        UserName = user.UserName,
+                        FullName = user.FullName,
+                        UserRank = user.UserRank
+                    })
+                    .ToListAsync();
+
+                return Ok(new { message = "Sikeres lekérdezés", result = users });
             }
             catch (Exception ex)
             {
@@ -135,7 +155,7 @@ public async Task<ActionResult> UsersExist()
 
                 if (user != null)
                 {
-                    return Ok(new { message = "Sikeres lekérdezés", result = user });
+                    return Ok(new { message = "Sikeres lekérdezés", result = ToResponse(user) });
                 }
                 return StatusCode(404, new { message = "Sikertelen lekérdezés.", result = user });
             }
@@ -182,7 +202,7 @@ public async Task<ActionResult> UpdateUser(
             return Ok(new
             {
                 message = "Sikeres frissítés.",
-                result = user
+                result = ToResponse(user)
             });
         }
 
@@ -256,7 +276,7 @@ public async Task<ActionResult> DeleteUser(
         return Ok(new
         {
             message = "Sikeres törlés.",
-            result = user
+            result = ToResponse(user)
         });
     }
     catch (Exception ex)
@@ -272,10 +292,23 @@ public async Task<ActionResult> DeleteUser(
         public IActionResult Login(LoginDto login)
         {
             var user = _warehouseContext.Users.FirstOrDefault(u =>
-                u.UserName == login.UserName &&
-                u.Password == login.Password);
+                u.UserName == login.UserName);
 
-            if (user == null)
+            if (user == null || string.IsNullOrWhiteSpace(user.PasswordHash))
+            {
+                return Unauthorized(new
+                {
+                    message = "Hibás felhasználónév vagy jelszó."
+                });
+            }
+
+            var verificationResult = _passwordHasher.VerifyHashedPassword(
+                user,
+                user.PasswordHash,
+                login.Password ?? string.Empty
+            );
+
+            if (verificationResult == PasswordVerificationResult.Failed)
             {
                 return Unauthorized(new
                 {
@@ -286,7 +319,7 @@ public async Task<ActionResult> DeleteUser(
             return Ok(new
             {
                 message = "Sikeres bejelentkezés.",
-                result = user
+                result = ToResponse(user)
             });
         }
 
@@ -308,7 +341,12 @@ public async Task<ActionResult> ChangePassword(
             });
         }
 
-        if (user.Password != changePasswordDto.CurrentPassword)
+        if (string.IsNullOrWhiteSpace(user.PasswordHash) ||
+            _passwordHasher.VerifyHashedPassword(
+                user,
+                user.PasswordHash,
+                changePasswordDto.CurrentPassword ?? string.Empty
+            ) == PasswordVerificationResult.Failed)
         {
             return BadRequest(new
             {
@@ -324,7 +362,10 @@ public async Task<ActionResult> ChangePassword(
             });
         }
 
-        user.Password = changePasswordDto.NewPassword;
+        user.PasswordHash = _passwordHasher.HashPassword(
+            user,
+            changePasswordDto.NewPassword!
+        );
 
         await _warehouseContext.SaveChangesAsync();
 
@@ -387,7 +428,10 @@ public async Task<ActionResult> ChangeUserPassword(
             });
         }
 
-        user.Password = changePasswordDto.NewPassword;
+        user.PasswordHash = _passwordHasher.HashPassword(
+            user,
+            changePasswordDto.NewPassword!
+        );
 
         _warehouseContext.Users.Update(user);
 
@@ -407,7 +451,18 @@ public async Task<ActionResult> ChangeUserPassword(
     }
 }
 
+    private static UserResponseDto ToResponse(User user)
+    {
+        return new UserResponseDto
+        {
+            IdU = user.IdU,
+            UserName = user.UserName,
+            FullName = user.FullName,
+            UserRank = user.UserRank
+        };
     }
 }
+
+    }
 
 

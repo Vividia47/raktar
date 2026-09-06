@@ -74,7 +74,10 @@ public partial class WarehouseContext : DbContext
 
             entity.Property(e => e.IdU).HasColumnName("idU");
             entity.Property(e => e.FullName).HasMaxLength(100);
-            entity.Property(e => e.Password).HasMaxLength(30);
+            entity.Property(e => e.PasswordHash)
+                .HasMaxLength(255)
+                .HasColumnName("PasswordHash")
+                .IsRequired();
             entity.Property(e => e.UserName).HasMaxLength(100);
         });
 

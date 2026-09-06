@@ -12,7 +12,7 @@ public partial class User
 
     public string? FullName { get; set; }
 
-    public string? Password { get; set; }
+    public string? PasswordHash { get; set; }
 
     public int? UserRank { get; set; }
 
