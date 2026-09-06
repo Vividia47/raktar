@@ -155,6 +155,15 @@ function displayProducts() {
             const cell = document.createElement("td");
             cell.dataset.label = label;
             cell.textContent = value;
+
+            if (label === "Rendelendő mennyiség" && value > 0) {
+                const warningIcon = document.createElement("i");
+                warningIcon.className = "bi bi-exclamation-diamond-fill reorder-warning ms-1";
+                warningIcon.setAttribute("aria-hidden", "true");
+                warningIcon.title = "Rendelés szükséges";
+                cell.appendChild(warningIcon);
+            }
+
             row.appendChild(cell);
         });
 

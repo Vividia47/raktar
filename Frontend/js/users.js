@@ -238,6 +238,15 @@ function displayUsers() {
             const cell = document.createElement("td");
             cell.dataset.label = label;
             cell.textContent = value ?? "";
+
+            if (label === "Szerepkör" && user.userRank === 1) {
+                const shieldIcon = document.createElement("i");
+                shieldIcon.className = "bi bi-shield-lock ms-1";
+                shieldIcon.setAttribute("aria-hidden", "true");
+                shieldIcon.title = "Raktárvezető";
+                cell.appendChild(shieldIcon);
+            }
+
             row.appendChild(cell);
         });
 

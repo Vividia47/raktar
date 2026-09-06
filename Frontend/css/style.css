@@ -1,3 +1,86 @@
+body.bg-light {
+    background-color: #f4e7ce !important;
+    color: #302b28;
+    --bs-body-color: #302b28;
+    --bs-emphasis-color: #252220;
+}
+
+.card {
+    background-color: #f5ecdb;
+    border-color: #d4c7b0;
+}
+
+.form-control,
+.form-select {
+    background-color: #fff6ea;
+}
+
+.table {
+    --bs-table-color: #302b28;
+    --bs-table-bg: #f5ecdb;
+    --bs-table-striped-bg: #fff6ea;
+    --bs-table-hover-bg: #f1e2cb;
+    --bs-table-border-color: #d4c7b0;
+}
+
+.btn-primary {
+    --bs-btn-bg: #2f8f83;
+    --bs-btn-border-color: #2f8f83;
+    --bs-btn-hover-bg: #28786e;
+    --bs-btn-hover-border-color: #28786e;
+    --bs-btn-active-bg: #21655d;
+    --bs-btn-active-border-color: #21655d;
+}
+
+.btn-outline-primary {
+    --bs-btn-color: #28786e;
+    --bs-btn-border-color: #55a99e;
+    --bs-btn-hover-bg: #2f8f83;
+    --bs-btn-hover-border-color: #2f8f83;
+    --bs-btn-active-bg: #28786e;
+    --bs-btn-active-border-color: #28786e;
+}
+
+.btn-danger {
+    --bs-btn-bg: #c85a4a;
+    --bs-btn-border-color: #c85a4a;
+    --bs-btn-hover-bg: #b94b3b;
+    --bs-btn-hover-border-color: #b94b3b;
+    --bs-btn-active-bg: #aa4032;
+    --bs-btn-active-border-color: #aa4032;
+}
+
+.btn-outline-danger {
+    --bs-btn-color: #b94b3b;
+    --bs-btn-border-color: #c85a4a;
+    --bs-btn-hover-bg: #c85a4a;
+    --bs-btn-hover-border-color: #c85a4a;
+    --bs-btn-active-bg: #b94b3b;
+    --bs-btn-active-border-color: #b94b3b;
+}
+
+.reorder-warning {
+    color: #b94b3b !important;
+}
+
+.btn-secondary {
+    --bs-btn-bg: #786f66;
+    --bs-btn-border-color: #786f66;
+    --bs-btn-hover-bg: #685f57;
+    --bs-btn-hover-border-color: #685f57;
+    --bs-btn-active-bg: #5b534c;
+    --bs-btn-active-border-color: #5b534c;
+}
+
+.btn-outline-secondary {
+    --bs-btn-color: #685f57;
+    --bs-btn-border-color: #a69a8d;
+    --bs-btn-hover-bg: #786f66;
+    --bs-btn-hover-border-color: #786f66;
+    --bs-btn-active-bg: #685f57;
+    --bs-btn-active-border-color: #685f57;
+}
+
 .page-header {
     gap: 1rem;
 }
@@ -13,8 +96,8 @@
 
 .dashboard-card:hover,
 .dashboard-card:focus-visible {
-    background-color: #eaf4ff;
-    box-shadow: 0 0.5rem 1rem rgba(13, 110, 253, 0.15) !important;
+    background-color: #fff6ea;
+    box-shadow: 0 0.5rem 1rem rgba(86, 57, 39, 0.15) !important;
 }
 
 .notification-container {
@@ -33,9 +116,10 @@
     vertical-align: middle;
 }
 
-.mobile-card-table .text-end {
+.mobile-card-table td.text-end {
     display: flex;
     flex-wrap: wrap;
+    align-items: center;
     justify-content: flex-end;
     gap: 0.35rem;
 }
@@ -67,8 +151,8 @@
         display: flex;
         width: 100%;
         padding: 0.75rem 1rem;
-        background-color: #fff;
-        border-top: 1px solid #dee2e6;
+        background-color: #f5ecdb;
+        border-top: 1px solid #d4c7b0;
         box-shadow: 0 -0.25rem 0.75rem rgba(0, 0, 0, 0.08);
     }
 
@@ -86,8 +170,8 @@
         width: 100%;
         justify-content: flex-end;
         padding: 0.75rem 1rem;
-        background-color: #fff;
-        border-top: 1px solid #dee2e6;
+        background-color: #f5ecdb;
+        border-top: 1px solid #d4c7b0;
         box-shadow: 0 -0.25rem 0.75rem rgba(0, 0, 0, 0.08);
     }
 
@@ -136,8 +220,8 @@
 
     .mobile-card-table tr {
         padding: 0.75rem 1rem;
-        background: #fff;
-        border: 1px solid #dee2e6;
+        background: #f5ecdb;
+        border: 1px solid #d4c7b0;
         border-radius: 0.5rem;
         box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
     }
@@ -168,18 +252,18 @@
         content: none;
     }
 
-    .mobile-card-table .text-end {
+    .mobile-card-table td.text-end {
         display: flex;
         flex-wrap: wrap;
         justify-content: flex-start;
         gap: 0.5rem;
         margin-top: 0.5rem;
         padding-top: 0.75rem;
-        border-top: 1px solid #e9ecef;
+        border-top: 1px solid #d4c7b0;
         text-align: left !important;
     }
 
-    .mobile-card-table .text-end::before {
+    .mobile-card-table td.text-end::before {
         flex-basis: 100%;
     }
 
@@ -206,9 +290,5 @@
 }
 
 .low-stock td {
-    color: #8b0000;
-}
-
-.manager-user td {
-    color: #007751;
+    color: #6f3029;
 }
