@@ -386,10 +386,14 @@ document
 
 
             const products = await getGoods();
+            const product = products.find(
+                item => item.idP == productId
+            );
 
-
-
-
+            if (!product) {
+                showNotification("A termék nem található.", "danger");
+                return;
+            }
 
             document.getElementById("edit-product-article").value =
                 product.article ?? "";

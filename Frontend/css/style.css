@@ -10,6 +10,11 @@ body.bg-light {
     border-color: #d4c7b0;
 }
 
+.modal-content {
+    background-color: #f5ecdb;
+    border-color: #d4c7b0;
+}
+
 .form-control,
 .form-select {
     background-color: #fff6ea;
