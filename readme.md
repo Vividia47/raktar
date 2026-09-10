@@ -6,7 +6,7 @@ Raktárkezelő webalkalmazás készletnyilvántartáshoz és raktári folyamatok
 
 **Adatbázis:** MySQL
 
-**Backend:** ASP.NET Core Web API (C#), JWT Bearer autentikáció
+**Backend:** ASP.NET Core Web API (C#), JWT Bearer hitelesítés
 
 **Frontend:** HTML5, CSS3, JavaScript, Bootstrap
 
@@ -28,10 +28,10 @@ Az alkalmazás első indításakor, amennyiben még nincs felhasználó az adatb
 
 ## Indítás
 
-A backend könyvtárból:
+A főkönyvtárból:
 
 ```bash
-cd Backend
+cd Backend\WarehouseAPI\WarehouseAPI
 dotnet run
 ```
 
