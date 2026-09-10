@@ -1,4 +1,4 @@
-[Magyar](README.md) | [English](README.en.md)
+[Magyar](readme.md) | [English](readme.en.md)
 
 # Warehouse Management
 
