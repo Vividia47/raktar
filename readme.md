@@ -1,3 +1,5 @@
+[Magyar](README.md) | [English](README.en.md)
+
 # Raktárkezelő
 
 Raktárkezelő webalkalmazás készletnyilvántartáshoz és raktári folyamatok kezeléséhez. Szoftverfejlesztő tanfolyam vizsgaremek / csoportos projektmunka.
