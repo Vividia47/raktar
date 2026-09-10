@@ -22,13 +22,31 @@ A backend adatbázis-kapcsolata a konfigurációs fájlban módosítható.
 
 A projekthez tartozó adatbázis-dump a repositoryban található.
 
+Az adatbázis használatához:
+
+1. Indítsa el a MySQL-kiszolgálót, például WAMP használata esetén a WAMP-ból.
+2. Nyissa meg a phpMyAdmin felületét.
+3. Hozza létre a projekt által használt adatbázist.
+4. A repositoryban található `create.sql` adatbázis-dump importálásával hozza létre az adatbázis tábláit.
+5. Ellenőrizze a backend konfigurációs fájljában az adatbázis-kapcsolat adatait, és szükség esetén módosítsa azokat a saját MySQL-környezetedhez.
+
 Az adatbázis **szándékosan nem tartalmaz előre feltöltött felhasználókat vagy termékeket**.
 
 Az alkalmazás első indításakor, amennyiben még nincs felhasználó az adatbázisban, a kezdőoldalon létrehozható az első felhasználói fiók.
 
 ## Indítás
 
-A főkönyvtárból:
+### 1. MySQL elindítása
+
+Indítsa el a MySQL-kiszolgálót WAMP, XAMPP vagy más MySQL-környezet segítségével.
+
+### 2. Adatbázis beállítása
+
+A fent leírt módon importálja az adatbázis-dumpot phpMyAdmin segítségével, majd ellenőrizze a backend adatbázis-kapcsolatát.
+
+### 3. Backend indítása
+
+A projekt főkönyvtárából:
 
 ```bash
 cd Backend\WarehouseAPI\WarehouseAPI
@@ -85,8 +103,6 @@ A backend REST API-n keresztül biztosítja többek között:
 * készletmozgások rögzítése
 * előzmények lekérdezése
 
-A hitelesítést igénylő végpontok JWT Bearer tokent használnak.
-
 ## Hasznos fejlesztői eszközök
 
 * Visual Studio / Visual Studio Code
@@ -110,4 +126,4 @@ Frontend fejlesztés, felhasználói felület, hitelesítés.
 
 A projekt oktatási célból, csoportos vizsgaremekként készült.
 
-Az alkalmazás üres adatbázissal is elindítható. Az első felhasználó létrehozása után a rendszer a felhasználó szerepkörének megfelelő funkciókat biztosítja.
+Az alkalmazás üres adatbázissal is elindítható. Az első felhasználó létrehozása után a rendszer a felhasználó szerepkörének megfelelő funkciókat biztosít.
