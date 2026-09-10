@@ -24,15 +24,15 @@ A projekthez tartozó adatbázis-dump a repositoryban található.
 
 Az adatbázis használatához:
 
-1. Indítsa el a MySQL-kiszolgálót, például WAMP használata esetén a WAMP-ból.
+1. Indítsa el a MySQL-kiszolgálót, például WAMP használatával.
 2. Nyissa meg a phpMyAdmin felületét.
-3. Hozza létre a projekt által használt adatbázist.
-4. A repositoryban található `create.sql` adatbázis-dump importálásával hozza létre az adatbázis tábláit.
-5. Ellenőrizze a backend konfigurációs fájljában az adatbázis-kapcsolat adatait, és szükség esetén módosítsa azokat a saját MySQL-környezetedhez.
+3. Importálja a repositoryban található `create.sql` adatbázis-dumpot.
+4. A dump automatikusan létrehozza a `warehouse` nevű adatbázist és a szükséges táblákat.
+5. Ellenőrizze a backend konfigurációs fájljában az adatbázis-kapcsolat adatait, és szükség esetén módosítsa azokat a saját MySQL-környezetéhez.
 
-Az adatbázis **szándékosan nem tartalmaz előre feltöltött felhasználókat vagy termékeket**.
+Az adatbázis szándékosan nem tartalmaz előre feltöltött felhasználókat vagy termékeket.
 
-Az alkalmazás első indításakor, amennyiben még nincs felhasználó az adatbázisban, a kezdőoldalon létrehozható az első felhasználói fiók.
+Ha az adatbázis még nem tartalmaz felhasználót, az első felhasználói fiók a kezdőoldalon hozható létre.
 
 ## Indítás
 
@@ -40,11 +40,7 @@ Az alkalmazás első indításakor, amennyiben még nincs felhasználó az adatb
 
 Indítsa el a MySQL-kiszolgálót WAMP, XAMPP vagy más MySQL-környezet segítségével.
 
-### 2. Adatbázis beállítása
-
-A fent leírt módon importálja az adatbázis-dumpot phpMyAdmin segítségével, majd ellenőrizze a backend adatbázis-kapcsolatát.
-
-### 3. Backend indítása
+### 2. Backend indítása
 
 A projekt főkönyvtárából:
 
@@ -102,6 +98,8 @@ A backend REST API-n keresztül biztosítja többek között:
 * raktárkészlet kezelése
 * készletmozgások rögzítése
 * előzmények lekérdezése
+
+A hitelesítést igénylő végpontok JWT Bearer tokent használnak.
 
 ## Hasznos fejlesztői eszközök
 
