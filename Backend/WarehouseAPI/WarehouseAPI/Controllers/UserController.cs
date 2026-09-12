@@ -36,17 +36,38 @@ namespace WarehouseAPI.Controllers
         {
             try
             {
-                if (await _warehouseContext.Users.AnyAsync() &&
+                var usersAlreadyExist = await _warehouseContext.Users.AnyAsync();
+
+                if (usersAlreadyExist &&
                     (!User.Identity?.IsAuthenticated ?? true || !User.IsInRole("1")))
                 {
                     return Forbid();
                 }
 
+                var userName = addUserDto.UserName?.Trim();
+
+                if (string.IsNullOrWhiteSpace(userName))
+                {
+                    return BadRequest(new
+                    {
+                        message = "A felhasználónév megadása kötelező."
+                    });
+                }
+
+                if (await _warehouseContext.Users.AnyAsync(
+                    existingUser => existingUser.UserName == userName))
+                {
+                    return Conflict(new
+                    {
+                        message = "Ez a felhasználónév már használatban van."
+                    });
+                }
+
                 var user = new User
                 {
-                    UserName = addUserDto.UserName,
+                    UserName = userName,
                     FullName = addUserDto.FullName,
-                    UserRank = addUserDto.UserRank
+                    UserRank = usersAlreadyExist ? addUserDto.UserRank : 1
                 };
 
                 user.PasswordHash = _passwordHasher.HashPassword(
@@ -70,33 +91,27 @@ namespace WarehouseAPI.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(400, new { message = ex.Message });
+                Console.Error.WriteLine(ex);
+
+                if (ex is DbUpdateException)
+                {
+                    return Conflict(new
+                    {
+                        message = "Ez a felhasználónév már használatban van."
+                    });
+                }
+
+                return StatusCode(400, new { message = "Hiba történt a felhasználó művelet végrehajtása során." });
 
             }
         }
 
         [HttpGet]
         [Authorize(Roles = "1")]
-public async Task<ActionResult> GetAllUsers([FromQuery] int userId)
+        public async Task<ActionResult> GetAllUsers()
         {
             try
             {
-
-                var user = await _warehouseContext.Users
-    .FirstOrDefaultAsync(x => x.IdU == userId);
-
-if (user == null)
-{
-    return NotFound(new
-    {
-        message = "Nincs ilyen felhasználó."
-    });
-}
-
-if (user.UserRank != 1)
-{
-    return Forbid();
-}
                 var users = await _warehouseContext.Users
                     .Select(user => new UserResponseDto
                     {
@@ -111,60 +126,63 @@ if (user.UserRank != 1)
             }
             catch (Exception ex)
             {
-                return StatusCode(400, new { message = ex.Message });
+                Console.Error.WriteLine(ex);
+                return StatusCode(400, new { message = "Hiba történt a felhasználók lekérése során." });
             }
         }
 
         [HttpGet("names")]
         [Authorize]
-public async Task<ActionResult> GetUserNames()
-{
-    try
-    {
-        var users = await _warehouseContext.Users
-            .Select(x => new
+        public async Task<ActionResult> GetUserNames()
+        {
+            try
             {
-                idU = x.IdU,
-                fullName = x.FullName
-            })
-            .ToListAsync();
+                var users = await _warehouseContext.Users
+                    .Select(x => new
+                    {
+                        idU = x.IdU,
+                        fullName = x.FullName
+                    })
+                    .ToListAsync();
 
-        return Ok(new
-        {
-            message = "Sikeres lekérdezés.",
-            result = users
-        });
-    }
-    catch (Exception ex)
-    {
-        return StatusCode(400, new
-        {
-            message = ex.Message
-        });
-    }
-}
+                return Ok(new
+                {
+                    message = "Sikeres lekérdezés.",
+                    result = users
+                });
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine(ex);
+                return StatusCode(400, new
+                {
+                    message = "Hiba történt a felhasználónevek lekérése során."
+                });
+            }
+        }
 
         [HttpGet("exists")]
         [AllowAnonymous]
-public async Task<ActionResult> UsersExist()
-{
-    try
-    {
-        var exists = await _warehouseContext.Users.AnyAsync();
+        public async Task<ActionResult> UsersExist()
+        {
+            try
+            {
+                var exists = await _warehouseContext.Users.AnyAsync();
 
-        return Ok(new
-        {
-            result = exists
-        });
-    }
-    catch (Exception ex)
-    {
-        return StatusCode(400, new
-        {
-            message = ex.Message
-        });
-    }
-}
+                return Ok(new
+                {
+                    result = exists
+                });
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine(ex);
+                return StatusCode(400, new
+                {
+                    message = "Hiba történt a felhasználók ellenőrzése során."
+                });
+            }
+        }
 
         [HttpGet("byid")]
         [Authorize]
@@ -182,134 +200,118 @@ public async Task<ActionResult> UsersExist()
             }
             catch (Exception ex)
             {
-                return StatusCode(400, new { message = ex.Message });
+                Console.Error.WriteLine(ex);
+                return StatusCode(400, new { message = "Hiba történt a felhasználó lekérése során." });
             }
         }
 
         [HttpPut]
         [Authorize(Roles = "1")]
-public async Task<ActionResult> UpdateUser(
+        public async Task<ActionResult> UpdateUser(
     [FromQuery] int id,
     [FromBody] UpdateUserDto updateUserDto)
-{
-    try
-    {
-        var user = await _warehouseContext.Users
-            .FirstOrDefaultAsync(x => x.IdU == id);
-
-        if (user != null)
         {
-            if (user.UserRank == 1 && updateUserDto.UserRank != 1)
-{
-    var managerCount = await _warehouseContext.Users
-        .CountAsync(x => x.UserRank == 1);
-
-    if (managerCount <= 1)
-    {
-        return BadRequest(new
-        {
-            message = "A rendszerben legalább egy Raktárvezetőnek kell lennie."
-        });
-    }
-}
-
-            user.UserName = updateUserDto.UserName;
-            user.FullName = updateUserDto.FullName;
-            user.UserRank = updateUserDto.UserRank;
-
-            _warehouseContext.Users.Update(user);
-
-            await _warehouseContext.SaveChangesAsync();
-
-            return Ok(new
+            try
             {
-                message = "Sikeres frissítés.",
-                result = ToResponse(user)
-            });
-        }
+                var user = await _warehouseContext.Users
+                    .FirstOrDefaultAsync(x => x.IdU == id);
 
-        return StatusCode(404, new
-        {
-            message = "Nincs találat."
-        });
-    }
-    catch (Exception ex)
-    {
-        return StatusCode(400, new
-        {
-            message = ex.Message
-        });
-    }
-}
-        [HttpDelete]
-        [Authorize(Roles = "1")]
-public async Task<ActionResult> DeleteUser(
-    [FromQuery] int id,
-    [FromQuery] int userId)
-{
-    try
-    {
-        var currentUser = await _warehouseContext.Users
-            .FirstOrDefaultAsync(x => x.IdU == userId);
-
-        if (currentUser == null)
-        {
-            return NotFound(new
-            {
-                message = "Nincs ilyen felhasználó."
-            });
-        }
-                if (currentUser.UserRank != 1)
-        {
-            return StatusCode(403, new
-            {
-                message = "Nincs jogosultsága felhasználó törléséhez."
-            });
-        }
-
-        var user = await _warehouseContext.Users
-            .FirstOrDefaultAsync(x => x.IdU == id);
-
-        if (user == null)
-        {
-            return NotFound(new
-            {
-                message = "Nincs találat."
-            });
-        }
-
-        if (user.UserRank == 1)
-        {
-            var managerCount = await _warehouseContext.Users
-                .CountAsync(x => x.UserRank == 1);
-
-            if (managerCount <= 1)
-            {
-                return BadRequest(new
+                if (user != null)
                 {
-                    message = "A rendszerben legalább egy Raktárvezetőnek kell lennie."
+                    if (user.UserRank == 1 && updateUserDto.UserRank != 1)
+                    {
+                        var managerCount = await _warehouseContext.Users
+                            .CountAsync(x => x.UserRank == 1);
+
+                        if (managerCount <= 1)
+                        {
+                            return BadRequest(new
+                            {
+                                message = "A rendszerben legalább egy Raktárvezetőnek kell lennie."
+                            });
+                        }
+                    }
+
+                    user.UserName = updateUserDto.UserName;
+                    user.FullName = updateUserDto.FullName;
+                    user.UserRank = updateUserDto.UserRank;
+
+                    _warehouseContext.Users.Update(user);
+
+                    await _warehouseContext.SaveChangesAsync();
+
+                    return Ok(new
+                    {
+                        message = "Sikeres frissítés.",
+                        result = ToResponse(user)
+                    });
+                }
+
+                return StatusCode(404, new
+                {
+                    message = "Nincs találat."
+                });
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine(ex);
+                return StatusCode(400, new
+                {
+                    message = "Hiba történt a felhasználó frissítése során."
                 });
             }
         }
-
-        _warehouseContext.Users.Remove(user);
-
-        await _warehouseContext.SaveChangesAsync();
-
-        return Ok(new
+        [HttpDelete]
+        [Authorize(Roles = "1")]
+        public async Task<ActionResult> DeleteUser(
+    [FromQuery] int id)
         {
-            message = "Sikeres törlés.",
-            result = ToResponse(user)
-        });
-    }
-    catch (Exception ex)
-    {
-        return StatusCode(400, new
-        {
-            message = ex.Message
-        });
-    }
-}
+            try
+            {
+                var user = await _warehouseContext.Users
+                    .FirstOrDefaultAsync(x => x.IdU == id);
+
+                if (user == null)
+                {
+                    return NotFound(new
+                    {
+                        message = "Nincs találat."
+                    });
+                }
+
+                if (user.UserRank == 1)
+                {
+                    var managerCount = await _warehouseContext.Users
+                        .CountAsync(x => x.UserRank == 1);
+
+                    if (managerCount <= 1)
+                    {
+                        return BadRequest(new
+                        {
+                            message = "A rendszerben legalább egy Raktárvezetőnek kell lennie."
+                        });
+                    }
+                }
+
+                _warehouseContext.Users.Remove(user);
+
+                await _warehouseContext.SaveChangesAsync();
+
+                return Ok(new
+                {
+                    message = "Sikeres törlés.",
+                    result = ToResponse(user)
+                });
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine(ex);
+                return StatusCode(400, new
+                {
+                    message = "Hiba történt a felhasználó törlése során."
+                });
+            }
+        }
 
         [HttpPost("login")]
         [AllowAnonymous]
@@ -350,174 +352,169 @@ public async Task<ActionResult> DeleteUser(
 
         [HttpPut("change-password")]
         [Authorize]
-public async Task<ActionResult> ChangePassword(
-    [FromQuery] int id,
+        public async Task<ActionResult> ChangePassword(
     [FromBody] ChangePasswordDto changePasswordDto)
-{
-    try
-    {
-        var user = await _warehouseContext.Users
-            .FirstOrDefaultAsync(x => x.IdU == id);
-
-        if (user == null)
         {
-            return NotFound(new
+            try
             {
-                message = "Nincs ilyen felhasználó."
-            });
+                var id = GetCurrentUserId();
+                var user = await _warehouseContext.Users
+                    .FirstOrDefaultAsync(x => x.IdU == id);
+
+                if (user == null)
+                {
+                    return NotFound(new
+                    {
+                        message = "Nincs ilyen felhasználó."
+                    });
+                }
+
+                if (string.IsNullOrWhiteSpace(user.PasswordHash) ||
+                    _passwordHasher.VerifyHashedPassword(
+                        user,
+                        user.PasswordHash,
+                        changePasswordDto.CurrentPassword ?? string.Empty
+                    ) == PasswordVerificationResult.Failed)
+                {
+                    return BadRequest(new
+                    {
+                        message = "A jelenlegi jelszó hibás."
+                    });
+                }
+
+                if (changePasswordDto.NewPassword != changePasswordDto.ConfirmPassword)
+                {
+                    return BadRequest(new
+                    {
+                        message = "Az új jelszavak nem egyeznek."
+                    });
+                }
+
+                user.PasswordHash = _passwordHasher.HashPassword(
+                    user,
+                    changePasswordDto.NewPassword!
+                );
+
+                await _warehouseContext.SaveChangesAsync();
+
+                return Ok(new
+                {
+                    message = "Sikeres jelszómódosítás."
+                });
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine(ex);
+                return BadRequest(new
+                {
+                    message = "Hiba történt a jelszó módosítása során."
+                });
+            }
         }
 
-        if (string.IsNullOrWhiteSpace(user.PasswordHash) ||
-            _passwordHasher.VerifyHashedPassword(
-                user,
-                user.PasswordHash,
-                changePasswordDto.CurrentPassword ?? string.Empty
-            ) == PasswordVerificationResult.Failed)
+        [HttpPut("change-password-manager")]
+        [Authorize(Roles = "1")]
+        public async Task<ActionResult> ChangeUserPassword(
+            [FromQuery] int id,
+            [FromBody] ChangePasswordDto changePasswordDto)
         {
-            return BadRequest(new
+            try
             {
-                message = "A jelenlegi jelszó hibás."
-            });
+                var user = await _warehouseContext.Users
+                    .FirstOrDefaultAsync(x => x.IdU == id);
+
+                if (user == null)
+                {
+                    return NotFound(new
+                    {
+                        message = "Nincs ilyen felhasználó."
+                    });
+                }
+
+                if (changePasswordDto.NewPassword != changePasswordDto.ConfirmPassword)
+                {
+                    return BadRequest(new
+                    {
+                        message = "A két jelszó nem egyezik."
+                    });
+                }
+
+                user.PasswordHash = _passwordHasher.HashPassword(
+                    user,
+                    changePasswordDto.NewPassword!
+                );
+
+                _warehouseContext.Users.Update(user);
+
+                await _warehouseContext.SaveChangesAsync();
+
+                return Ok(new
+                {
+                    message = "A jelszó sikeresen módosítva."
+                });
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine(ex);
+                return StatusCode(400, new
+                {
+                    message = "Hiba történt a jelszó módosítása során."
+                });
+            }
         }
 
-        if (changePasswordDto.NewPassword != changePasswordDto.ConfirmPassword)
+        private static UserResponseDto ToResponse(User user)
         {
-            return BadRequest(new
+            return new UserResponseDto
             {
-                message = "Az új jelszavak nem egyeznek."
-            });
+                IdU = user.IdU,
+                UserName = user.UserName,
+                FullName = user.FullName,
+                UserRank = user.UserRank
+            };
         }
 
-        user.PasswordHash = _passwordHasher.HashPassword(
-            user,
-            changePasswordDto.NewPassword!
-        );
-
-        await _warehouseContext.SaveChangesAsync();
-
-        return Ok(new
+        private string CreateToken(User user)
         {
-            message = "Sikeres jelszómódosítás."
-        });
-    }
-    catch (Exception ex)
-    {
-        return BadRequest(new
-        {
-            message = ex.Message
-        });
-    }
-}
-
-[HttpPut("change-password-manager")]
-    [Authorize(Roles = "1")]
-public async Task<ActionResult> ChangeUserPassword(
-    [FromQuery] int id,
-    [FromQuery] int userId,
-    [FromBody] ChangePasswordDto changePasswordDto)
-{
-    try
-    {
-        var currentUser = await _warehouseContext.Users
-            .FirstOrDefaultAsync(x => x.IdU == userId);
-
-        if (currentUser == null)
-        {
-            return NotFound(new
+            var claims = new[]
             {
-                message = "Nincs ilyen felhasználó."
-            });
-        }
-
-        if (currentUser.UserRank != 1)
-        {
-            return StatusCode(403, new
-            {
-                message = "Nincs jogosultsága másik felhasználó jelszavának módosításához."
-            });
-        }
-        var user = await _warehouseContext.Users
-            .FirstOrDefaultAsync(x => x.IdU == id);
-
-        if (user == null)
-        {
-            return NotFound(new
-            {
-                message = "Nincs ilyen felhasználó."
-            });
-        }
-
-        if (changePasswordDto.NewPassword != changePasswordDto.ConfirmPassword)
-        {
-            return BadRequest(new
-            {
-                message = "A két jelszó nem egyezik."
-            });
-        }
-
-        user.PasswordHash = _passwordHasher.HashPassword(
-            user,
-            changePasswordDto.NewPassword!
-        );
-
-        _warehouseContext.Users.Update(user);
-
-        await _warehouseContext.SaveChangesAsync();
-
-        return Ok(new
-        {
-            message = "A jelszó sikeresen módosítva."
-        });
-    }
-    catch (Exception ex)
-    {
-        return StatusCode(400, new
-        {
-            message = ex.Message
-        });
-    }
-}
-
-    private static UserResponseDto ToResponse(User user)
-    {
-        return new UserResponseDto
-        {
-            IdU = user.IdU,
-            UserName = user.UserName,
-            FullName = user.FullName,
-            UserRank = user.UserRank
-        };
-    }
-
-    private string CreateToken(User user)
-    {
-        var claims = new[]
-        {
             new Claim(JwtRegisteredClaimNames.Sub, user.IdU.ToString()),
             new Claim(ClaimTypes.NameIdentifier, user.IdU.ToString()),
             new Claim(ClaimTypes.Name, user.UserName ?? string.Empty),
             new Claim(ClaimTypes.Role, (user.UserRank ?? 0).ToString())
         };
 
-        var key = new SymmetricSecurityKey(
-            Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]!));
-        var credentials = new SigningCredentials(
-            key,
-            SecurityAlgorithms.HmacSha256);
-        var expirationMinutes = _configuration.GetValue<int?>(
-            "Jwt:ExpirationMinutes") ?? 60;
+            var key = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]!));
+            var credentials = new SigningCredentials(
+                key,
+                SecurityAlgorithms.HmacSha256);
+            var expirationMinutes = _configuration.GetValue<int?>(
+                "Jwt:ExpirationMinutes") ?? 60;
 
-        var token = new JwtSecurityToken(
-            issuer: _configuration["Jwt:Issuer"],
-            audience: _configuration["Jwt:Audience"],
-            claims: claims,
-            expires: DateTime.UtcNow.AddMinutes(expirationMinutes),
-            signingCredentials: credentials);
+            var token = new JwtSecurityToken(
+                issuer: _configuration["Jwt:Issuer"],
+                audience: _configuration["Jwt:Audience"],
+                claims: claims,
+                expires: DateTime.UtcNow.AddMinutes(expirationMinutes),
+                signingCredentials: credentials);
 
-        return new JwtSecurityTokenHandler().WriteToken(token);
+            return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+
+        private int GetCurrentUserId()
+        {
+            var claim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (!int.TryParse(claim, out var userId))
+            {
+                throw new UnauthorizedAccessException("Érvénytelen felhasználói azonosító.");
+            }
+
+            return userId;
+        }
     }
+
 }
-
-    }
 
 

@@ -35,6 +35,9 @@ public partial class WarehouseContext : DbContext
             entity.Property(e => e.Sprice).HasColumnName("SPrice");
             entity.Property(e => e.Unit).HasMaxLength(20);
             entity.Property(e => e.Vat).HasColumnName("VAT");
+            entity.Property(e => e.Vat).HasPrecision(5, 2);
+            entity.Property(e => e.Lpprice).HasPrecision(10, 2);
+            entity.Property(e => e.Sprice).HasPrecision(10, 2);
         });
 
         modelBuilder.Entity<History>(entity =>
@@ -55,6 +58,8 @@ public partial class WarehouseContext : DbContext
             entity.Property(e => e.Pprice).HasColumnName("PPrice");
             entity.Property(e => e.SerialNr).HasMaxLength(50);
             entity.Property(e => e.Sprice).HasColumnName("SPrice");
+            entity.Property(e => e.Pprice).HasPrecision(10, 2);
+            entity.Property(e => e.Sprice).HasPrecision(10, 2);
 
             entity.HasOne(d => d.IdPNavigation).WithMany(p => p.Histories)
     .HasForeignKey(d => d.IdP)
@@ -79,6 +84,9 @@ public partial class WarehouseContext : DbContext
                 .HasColumnName("PasswordHash")
                 .IsRequired();
             entity.Property(e => e.UserName).HasMaxLength(100);
+            entity.HasIndex(e => e.UserName)
+                .IsUnique()
+                .HasDatabaseName("UX_users_UserName");
         });
 
         OnModelCreatingPartial(modelBuilder);

@@ -14,11 +14,11 @@ public partial class Goods
 
     public string? Name { get; set; }
 
-    public float? Vat { get; set; }
+    public decimal? Vat { get; set; }
 
-    public float? Lpprice { get; set; }
+    public decimal? Lpprice { get; set; }
 
-    public float? Sprice { get; set; }
+    public decimal? Sprice { get; set; }
 
     public float? Stock { get; set; }
 

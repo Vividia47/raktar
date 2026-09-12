@@ -8,9 +8,9 @@ idP INT PRIMARY KEY AUTO_INCREMENT,
 Article VARCHAR(20),
 Barcode VARCHAR(13),
 Name VARCHAR(100),
-VAT FLOAT,
-LPPrice FLOAT,
-SPrice FLOAT,
+VAT DECIMAL(5,2),
+LPPrice DECIMAL(10,2),
+SPrice DECIMAL(10,2),
 Stock FLOAT,
 MinStock FLOAT,
 Unit VARCHAR(20),
@@ -24,7 +24,8 @@ idU INT PRIMARY KEY AUTO_INCREMENT,
 UserName VARCHAR(100),
 FullName VARCHAR(100),
 PasswordHash VARCHAR(255) NOT NULL,
-UserRank INT
+UserRank INT,
+CONSTRAINT UX_users_UserName UNIQUE (UserName)
 ) ENGINE=InnoDB;
 
 CREATE TABLE history (
@@ -35,8 +36,8 @@ Date DATETIME,
 InvoiceNr VARCHAR(100),
 Quantity FLOAT,
 Direction INT,
-PPrice FLOAT,
-SPrice FLOAT,
+PPrice DECIMAL(10,2),
+SPrice DECIMAL(10,2),
 SerialNr VARCHAR(50),
 
 CONSTRAINT fk_history_goods

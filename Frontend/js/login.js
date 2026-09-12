@@ -225,7 +225,7 @@ document.getElementById("change-password-form").addEventListener("submit", async
     setButtonLoading(submitButton, true);
 
     try {
-        await changePassword(user.idU, passwordData);
+        await changePassword(passwordData);
 
         showNotification("Sikeres jelszómódosítás! Kérjük, jelentkezzen be újra.", "success");
 

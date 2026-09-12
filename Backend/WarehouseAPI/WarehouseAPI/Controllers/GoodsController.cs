@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 using System.Linq.Expressions;
 using WarehouseAPI.Models;
 using WarehouseAPI.Models.DTOs;
@@ -22,27 +23,27 @@ namespace WarehouseAPI.Controllers
 
         [HttpPost]
         [Authorize(Roles = "1,2")]
-public async Task<ActionResult> AddNewGoods(
-    [FromQuery] int userId,
+        public async Task<ActionResult> AddNewGoods(
     [FromBody] AddGoodsDto addGoodsDto)
         {
             try
             {
-var user = await _warehousecontext.Users
-        .FirstOrDefaultAsync(x => x.IdU == userId);
+                var userId = GetCurrentUserId();
+                var user = await _warehousecontext.Users
+                    .FirstOrDefaultAsync(x => x.IdU == userId);
 
-    if (user == null)
-    {
-        return NotFound(new
-        {
-            message = "Nincs ilyen felhasználó."
-        });
-    }
+                if (user == null)
+                {
+                    return NotFound(new
+                    {
+                        message = "Nincs ilyen felhasználó."
+                    });
+                }
 
-    if (user.UserRank != 1 && user.UserRank != 2)
-    {
-        return Forbid();
-    }
+                if (user.UserRank != 1 && user.UserRank != 2)
+                {
+                    return Forbid();
+                }
 
                 var goods = new Goods
                 {
@@ -74,7 +75,8 @@ var user = await _warehousecontext.Users
             }
             catch (Exception ex)
             {
-                return StatusCode(400, new { message = ex.Message });
+                Console.Error.WriteLine(ex);
+                return StatusCode(400, new { message = "Hiba történt a termék művelet végrehajtása során." });
             }
         }
 
@@ -83,11 +85,12 @@ var user = await _warehousecontext.Users
         {
             try
             {
-                return Ok(new {message = "Sikeres lekérdezés", result = await _warehousecontext.Goods.ToListAsync()});
+                return Ok(new { message = "Sikeres lekérdezés", result = await _warehousecontext.Goods.ToListAsync() });
             }
             catch (Exception ex)
             {
-                return StatusCode(400, new { message = ex.Message });
+                Console.Error.WriteLine(ex);
+                return StatusCode(400, new { message = "Hiba történt a termékek lekérése során." });
             }
         }
 
@@ -106,43 +109,45 @@ var user = await _warehousecontext.Users
             }
             catch (Exception ex)
             {
-                return StatusCode(400, new { message = ex.Message });
+                Console.Error.WriteLine(ex);
+                return StatusCode(400, new { message = "Hiba történt a termék lekérése során." });
             }
         }
 
         [HttpPut]
         [Authorize(Roles = "1,2")]
-public async Task<ActionResult> UpdateGoods(
+        public async Task<ActionResult> UpdateGoods(
     [FromQuery] int id,
-    [FromQuery] int userId,
     [FromBody] UpdateGoodsDto updateGoodsDto)
         {
             try
             {
-var user = await _warehousecontext.Users
-    .FirstOrDefaultAsync(x => x.IdU == userId);
+                var userId = GetCurrentUserId();
+                var user = await _warehousecontext.Users
+                    .FirstOrDefaultAsync(x => x.IdU == userId);
 
-if (user == null)
-{
-    return NotFound(new
-    {
-        message = "Nincs ilyen felhasználó."
-    });
-}
+                if (user == null)
+                {
+                    return NotFound(new
+                    {
+                        message = "Nincs ilyen felhasználó."
+                    });
+                }
 
-if (user.UserRank != 1 && user.UserRank != 2)
-{
-    return Forbid();
-}
+                if (user.UserRank != 1 && user.UserRank != 2)
+                {
+                    return Forbid();
+                }
 
                 var goods = await _warehousecontext.Goods.FirstOrDefaultAsync(x => x.IdP == id); ;
 
-                if (goods  != null)
+                if (goods != null)
                 {
                     goods.Article = updateGoodsDto.Article;
                     goods.Barcode = updateGoodsDto.Barcode;
                     goods.Name = updateGoodsDto.Name;
                     goods.Vat = updateGoodsDto.Vat;
+                    goods.Sprice = updateGoodsDto.Sprice;
                     goods.MinStock = updateGoodsDto.MinStock;
                     goods.Unit = updateGoodsDto.Unit;
                     goods.Shelf = updateGoodsDto.Shelf;
@@ -151,7 +156,7 @@ if (user.UserRank != 1 && user.UserRank != 2)
 
                     _warehousecontext.Goods.Update(goods);
                     await _warehousecontext.SaveChangesAsync();
-                    return Ok( new { message = "Sikeres frissítés.", result = goods });
+                    return Ok(new { message = "Sikeres frissítés.", result = goods });
                 }
 
                 return StatusCode(404, new { message = "Nincs találat.", result = goods });
@@ -159,130 +164,133 @@ if (user.UserRank != 1 && user.UserRank != 2)
             }
             catch (Exception ex)
             {
-                return StatusCode(400, new { message = ex.Message });
+                Console.Error.WriteLine(ex);
+                return StatusCode(400, new { message = "Hiba történt a termék frissítése során." });
             }
         }
 
         [HttpPut("price")]
         [Authorize(Roles = "1,3")]
-public async Task<ActionResult> UpdateSellingPrice(
+        public async Task<ActionResult> UpdateSellingPrice(
     [FromQuery] int id,
-    [FromQuery] int userId,
-    [FromBody] float sprice)
-{
-    try
-    {
-var user = await _warehousecontext.Users
-    .FirstOrDefaultAsync(x => x.IdU == userId);
-
-if (user == null)
-{
-    return NotFound(new
-    {
-        message = "Nincs ilyen felhasználó."
-    });
-}
-
-if (user.UserRank != 1 && user.UserRank != 3)
-{
-    return Forbid();
-}
-
-        var goods = await _warehousecontext.Goods
-            .FirstOrDefaultAsync(x => x.IdP == id);
-
-        if (goods == null)
+    [FromBody] decimal sprice)
         {
-            return StatusCode(404, new
+            try
             {
-                message = "Nincs találat.",
-                result = goods
-            });
+                var userId = GetCurrentUserId();
+                var user = await _warehousecontext.Users
+                    .FirstOrDefaultAsync(x => x.IdU == userId);
+
+                if (user == null)
+                {
+                    return NotFound(new
+                    {
+                        message = "Nincs ilyen felhasználó."
+                    });
+                }
+
+                if (user.UserRank != 1 && user.UserRank != 3)
+                {
+                    return Forbid();
+                }
+
+                var goods = await _warehousecontext.Goods
+                    .FirstOrDefaultAsync(x => x.IdP == id);
+
+                if (goods == null)
+                {
+                    return StatusCode(404, new
+                    {
+                        message = "Nincs találat.",
+                        result = goods
+                    });
+                }
+
+                goods.Sprice = sprice;
+
+                _warehousecontext.Goods.Update(goods);
+                await _warehousecontext.SaveChangesAsync();
+
+                return Ok(new
+                {
+                    message = "Sikeres árfrissítés.",
+                    result = goods
+                });
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine(ex);
+                return StatusCode(400, new
+                {
+                    message = "Hiba történt az ár frissítése során."
+                });
+            }
         }
-
-        goods.Sprice = sprice;
-
-        _warehousecontext.Goods.Update(goods);
-        await _warehousecontext.SaveChangesAsync();
-
-        return Ok(new
-        {
-            message = "Sikeres árfrissítés.",
-            result = goods
-        });
-    }
-    catch (Exception ex)
-    {
-        return StatusCode(400, new
-        {
-            message = ex.Message
-        });
-    }
-}
 
         [HttpDelete]
         [Authorize(Roles = "1,2")]
-public async Task<ActionResult> DeleteGoods(
-    [FromQuery] int id,
-    [FromQuery] int userId)
-{
-    try
-    {
-        var user = await _warehousecontext.Users
-    .FirstOrDefaultAsync(x => x.IdU == userId);
-
-if (user == null)
-{
-    return NotFound(new
-    {
-        message = "Nincs ilyen felhasználó."
-    });
-}
-
-if (user.UserRank != 1 && user.UserRank != 2)
-{
-    return Forbid();
-}
-
-        var goods = await _warehousecontext.Goods.FindAsync(id);
-
-        if (goods != null)
+        public async Task<ActionResult> DeleteGoods(
+    [FromQuery] int id)
         {
-            if (goods.Stock != 0)
+            try
             {
-                return BadRequest(new
+                var userId = GetCurrentUserId();
+                var user = await _warehousecontext.Users
+            .FirstOrDefaultAsync(x => x.IdU == userId);
+
+                if (user == null)
                 {
-                    message = "A termék csak 0 készlet esetén törölhető."
+                    return NotFound(new
+                    {
+                        message = "Nincs ilyen felhasználó."
+                    });
+                }
+
+                if (user.UserRank != 1 && user.UserRank != 2)
+                {
+                    return Forbid();
+                }
+
+                var goods = await _warehousecontext.Goods.FindAsync(id);
+
+                if (goods != null)
+                {
+                    if (goods.Stock != 0)
+                    {
+                        return BadRequest(new
+                        {
+                            message = "A termék csak 0 készlet esetén törölhető."
+                        });
+                    }
+
+                    _warehousecontext.Goods.Remove(goods);
+                    await _warehousecontext.SaveChangesAsync();
+
+                    return Ok(new
+                    {
+                        message = "Sikeres törlés.",
+                        result = goods
+                    });
+                }
+
+                return StatusCode(404, new
+                {
+                    message = "Nincs találat.",
+                    result = goods
                 });
             }
-
-            _warehousecontext.Goods.Remove(goods);
-            await _warehousecontext.SaveChangesAsync();
-
-            return Ok(new
+            catch (Exception ex)
             {
-                message = "Sikeres törlés.",
-                result = goods
-            });
+                Console.Error.WriteLine(ex);
+                return StatusCode(400, new
+                {
+                    message = "Hiba történt a termék törlése során."
+                });
+            }
         }
 
-        return StatusCode(404, new
-        {
-            message = "Nincs találat.",
-            result = goods
-        });
-    }
-    catch (Exception ex)
-    {
-        return StatusCode(400, new
-        {
-            message = ex.Message
-        });
-    }
-}
-
         [HttpGet("getAllGoodsHistory")]     // fejkarton + mozgások együtt
-        public async Task<ActionResult> GetAllGoodsHistory(int id) 
+        public async Task<ActionResult> GetAllGoodsHistory(int id)
         {
             try
             {
@@ -297,7 +305,8 @@ if (user.UserRank != 1 && user.UserRank != 2)
             }
             catch (Exception ex)
             {
-                return StatusCode(400, new { message = ex.Message });
+                Console.Error.WriteLine(ex);
+                return StatusCode(400, new { message = "Hiba történt a termék előzményeinek lekérése során." });
             }
         }
 
@@ -307,46 +316,65 @@ if (user.UserRank != 1 && user.UserRank != 2)
         {
             try
             {
-var user = await _warehousecontext.Users
-    .FirstOrDefaultAsync(x => x.IdU == movementGoodsDto.IdU);
+                var userId = GetCurrentUserId();
+                var user = await _warehousecontext.Users
+                    .FirstOrDefaultAsync(x => x.IdU == userId);
 
-if (user == null)
-{
-    return NotFound(new
-    {
-        message = "Nincs ilyen felhasználó."
-    });
-}
+                if (user == null)
+                {
+                    return NotFound(new
+                    {
+                        message = "Nincs ilyen felhasználó."
+                    });
+                }
 
-if (user.UserRank != 1 && user.UserRank != 2)
-{
-    return Forbid();
-}
+                if (user.UserRank != 1 && user.UserRank != 2)
+                {
+                    return Forbid();
+                }
 
                 var goods = await _warehousecontext.Goods.FirstOrDefaultAsync(x => x.IdP == id); ;
 
                 if (goods != null)
                 {
                     int i = movementGoodsDto.Mcode;
-                    float lpp = movementGoodsDto.Lpprice;
+                    decimal lpp = movementGoodsDto.Lpprice;
                     float r = movementGoodsDto.Stock;
 
-                    if (i > 200)
-{
-    if (r > goods.Stock)
-    {
-        return BadRequest(new
-        {
-            message = "Nincs elegendő készlet a készletmozgás végrehajtásához."
-        });
-    }
+                    if (movementGoodsDto.Stock <= 0)
+                    {
+                        return BadRequest(new
+                        {
+                            message = "A mennyiségnek 0-nál nagyobbnak kell lennie."
+                        });
+                    }
 
-    goods.Stock -= r;
-}
-else
-{
-    goods.Stock += r;
-}
+                    var validCodes = new[] { 101, 102, 103, 104, 201, 202, 203, 204 };
+
+                    if (!validCodes.Contains(movementGoodsDto.Mcode))
+                    {
+                        return BadRequest(new
+                        {
+                            message = "Érvénytelen készletmozgás típus."
+                        });
+                    }
+
+                    if (i > 200)
+                    {
+                        if (r > goods.Stock)
+                        {
+                            return BadRequest(new
+                            {
+                                message = "Nincs elegendő készlet a készletmozgás végrehajtásához."
+                            });
+                        }
+
+                        goods.Stock -= r;
+                    }
+                    else
+                    {
+                        goods.Stock += r;
+                    }
 
                     if (i == 101 || i == 102)
                     {
@@ -359,13 +387,13 @@ else
                     var history = new History
                     {
                         IdP = goods.IdP,
-                        IdU = movementGoodsDto.IdU,
+                        IdU = userId,
                         Date = DateTime.Now,
                         InvoiceNr = movementGoodsDto.InvoiceNr,
                         Quantity = r,
                         Direction = i,
                         Pprice = movementGoodsDto.Lpprice,
-                        Sprice = movementGoodsDto.Sprice,
+                        Sprice = goods.Sprice,
                         SerialNr = movementGoodsDto.SerialNr
                     };
 
@@ -374,7 +402,7 @@ else
                     _warehousecontext.Goods.Update(goods);
 
                     await _warehousecontext.SaveChangesAsync();
-                    
+
                     return Ok(new { message = "Sikeres frissítés.", result = goods });
                 }
 
@@ -383,9 +411,21 @@ else
             }
             catch (Exception ex)
             {
-                return StatusCode(400, new { message = ex.Message });
+                Console.Error.WriteLine(ex);
+                return StatusCode(400, new { message = "Hiba történt a készletmozgás rögzítése során." });
             }
         }
 
+    private int GetCurrentUserId()
+    {
+        var claim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        if (!int.TryParse(claim, out var userId))
+        {
+            throw new UnauthorizedAccessException("Érvénytelen felhasználói azonosító.");
+        }
+
+        return userId;
     }
+}
 }

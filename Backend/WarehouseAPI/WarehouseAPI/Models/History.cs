@@ -20,9 +20,9 @@ public partial class History
 
     public int? Direction { get; set; }
 
-    public float? Pprice { get; set; }
+    public decimal? Pprice { get; set; }
 
-    public float? Sprice { get; set; }
+    public decimal? Sprice { get; set; }
 
     public string? SerialNr { get; set; }
 

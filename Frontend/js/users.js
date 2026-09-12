@@ -15,7 +15,7 @@ async function loadUsers() {
             return;
         }
 
-        allUsers = await getUsers(user.idU);
+        allUsers = await getUsers();
 
         displayUsers();
 
@@ -119,7 +119,6 @@ document.getElementById("change-user-password-form").addEventListener("submit", 
 
         await changeUserPassword(
             changingPasswordUserId,
-            currentUser.idU,
             {
                 newPassword: newPassword,
                 confirmPassword: confirmPassword
@@ -156,7 +155,7 @@ document.getElementById("users-table-body").addEventListener("click", function (
 
     const user = getLoggedInUser();
 
-    getUsers(user.idU).then(function (users) {
+    getUsers().then(function (users) {
 
         const selectedUser = users.find(function (user) {
             return user.idU == userId;
@@ -398,10 +397,7 @@ document.getElementById("confirm-delete-user-button").addEventListener("click", 
     try {
         const currentUser = getLoggedInUser();
 
-        await deleteUser(
-            pendingDeleteUserId,
-            currentUser.idU
-        );
+        await deleteUser(pendingDeleteUserId);
 
         bootstrap.Modal.getInstance(
             document.getElementById("delete-user-modal")

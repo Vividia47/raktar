@@ -1,4 +1,4 @@
-[Magyar](readme.md) | [English](readme.en.md)
+[Magyar](README.md) | [English](README.en.md)
 
 # Raktárkezelő
 
@@ -36,6 +36,28 @@ Az adatbázis szándékosan nem tartalmaz előre feltöltött felhasználókat v
 
 Ha az adatbázis még nem tartalmaz felhasználót, az első felhasználói fiók a kezdőoldalon hozható létre.
 
+### Adatbázis-létrehozás és séma
+
+A demo használatához a `Database/create.sql` a hivatalos adatbázis-séma és ezt kell importálni. Az alkalmazásban található `Database.EnsureCreated()` csak kényelmi tartalék: üres adatbázis esetén megpróbálja létrehozni a táblákat, de egy már létező adatbázis sémáját nem frissíti és nem hajt végre módosításokat.
+
+Ha a sémában később változás történik, a `create.sql` fájlt vagy a megfelelő SQL `ALTER TABLE` parancsokat kell használni. A jelenlegi demo-adatbázisban a `users.PasswordHash` oszlopnak kell szerepelnie a jelszóhash-ek tárolásához.
+
+A jelenlegi adatbázisban a pénzügyi mezők `DECIMAL` típusúak. Ha egy korábbi adatbázist használ, futtassa le egyszer:
+
+```sql
+ALTER TABLE goods
+	MODIFY VAT DECIMAL(5,2),
+	MODIFY LPPrice DECIMAL(10,2),
+	MODIFY SPrice DECIMAL(10,2);
+
+ALTER TABLE history
+	MODIFY PPrice DECIMAL(10,2),
+	MODIFY SPrice DECIMAL(10,2);
+
+ALTER TABLE users
+	ADD CONSTRAINT UX_users_UserName UNIQUE (UserName);
+```
+
 ## Indítás
 
 ### 1. MySQL elindítása
@@ -54,6 +76,18 @@ dotnet run
 A backend indítása után az alkalmazás a terminálban megjelenő címen érhető el.
 
 A frontend a backend API-ján keresztül kommunikál a szerverrel.
+
+### 3. Frontend indítása
+
+Nyissa meg a `Frontend` mappát VS Code-ban, majd indítsa el az `index.html` fájlt Live Serverrel. A Live Server alapértelmezett címe:
+
+```text
+http://localhost:5500/Frontend/index.html
+```
+
+Ha a Live Server a `127.0.0.1` címet használja, az is engedélyezve van.
+
+A projekt helyi vizsgaremek/demo célra készült. A fejlesztői JWT-kulcs a Development konfigurációban található, ezért a tanár egy friss repository-klónból külön titokbeállítás nélkül is el tudja indítani.
 
 ## Belépés és felhasználók
 

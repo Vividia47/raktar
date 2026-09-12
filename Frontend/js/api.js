@@ -8,7 +8,18 @@ function authFetch(url, options = {}) {
         headers.set("Authorization", `Bearer ${token}`);
     }
 
-    return fetch(url, { ...options, headers });
+    return fetch(url, { ...options, headers }).then(response => {
+        if (response.status === 401) {
+            localStorage.removeItem("loggedInUser");
+            localStorage.removeItem("accessToken");
+
+            if (!window.location.pathname.endsWith("/index.html")) {
+                window.location.href = "index.html";
+            }
+        }
+
+        return response;
+    });
 }
 
 function initializePasswordToggles() {
@@ -164,8 +175,8 @@ function initializeModalFocusManagement() {
     });
 }
 
-async function getUsers(userId) {
-    const response = await authFetch(`${API_BASE_URL}/user?userId=${userId}`);
+async function getUsers() {
+    const response = await authFetch(`${API_BASE_URL}/user`);
     if (!response.ok) throw new Error("Nem sikerült lekérni a felhasználókat.");
     return (await response.json()).result;
 }
@@ -188,8 +199,11 @@ async function addUser(user) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(user)
     });
-    if (!response.ok) throw new Error("Nem sikerült létrehozni a felhasználót.");
-    return response.json();
+    const data = await response.json();
+    if (!response.ok) {
+        throw new Error(data.message || "Nem sikerült létrehozni a felhasználót.");
+    }
+    return data;
 }
 
 async function updateUser(id, user) {
@@ -203,15 +217,15 @@ async function updateUser(id, user) {
     return data;
 }
 
-async function deleteUser(id, userId) {
-    const response = await authFetch(`${API_BASE_URL}/user?id=${id}&userId=${userId}`, { method: "DELETE" });
+async function deleteUser(id) {
+    const response = await authFetch(`${API_BASE_URL}/user?id=${id}`, { method: "DELETE" });
     const data = await response.json();
     if (!response.ok) throw new Error(data.message || "Nem sikerült törölni a felhasználót.");
     return data;
 }
 
-async function changeUserPassword(id, userId, passwordData) {
-    const response = await authFetch(`${API_BASE_URL}/user/change-password-manager?id=${id}&userId=${userId}`, {
+async function changeUserPassword(id, passwordData) {
+    const response = await authFetch(`${API_BASE_URL}/user/change-password-manager?id=${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(passwordData)
@@ -227,8 +241,8 @@ async function getGoods() {
     return (await response.json()).result;
 }
 
-async function addGoods(product, userId) {
-    const response = await authFetch(`${API_BASE_URL}/goods?userId=${userId}`, {
+async function addGoods(product) {
+    const response = await authFetch(`${API_BASE_URL}/goods`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(product)
@@ -238,8 +252,8 @@ async function addGoods(product, userId) {
     return data.result;
 }
 
-async function updateGoods(id, product, userId) {
-    const response = await authFetch(`${API_BASE_URL}/goods?id=${id}&userId=${userId}`, {
+async function updateGoods(id, product) {
+    const response = await authFetch(`${API_BASE_URL}/goods?id=${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(product)
@@ -249,8 +263,8 @@ async function updateGoods(id, product, userId) {
     return data.result;
 }
 
-async function deleteGoods(id, userId) {
-    const response = await authFetch(`${API_BASE_URL}/goods?id=${id}&userId=${userId}`, { method: "DELETE" });
+async function deleteGoods(id) {
+    const response = await authFetch(`${API_BASE_URL}/goods?id=${id}`, { method: "DELETE" });
     const data = await response.json();
     if (!response.ok) throw new Error(data.message || "Nem sikerült törölni a terméket.");
     return data.result;
@@ -289,8 +303,8 @@ function hasRole(...allowedRanks) {
     return user ? allowedRanks.includes(user.userRank) : false;
 }
 
-async function updateSellingPrice(id, sprice, userId) {
-    const response = await authFetch(`${API_BASE_URL}/goods/price?id=${id}&userId=${userId}`, {
+async function updateSellingPrice(id, sprice) {
+    const response = await authFetch(`${API_BASE_URL}/goods/price?id=${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(sprice)
@@ -300,8 +314,8 @@ async function updateSellingPrice(id, sprice, userId) {
     return data.result;
 }
 
-async function changePassword(id, passwordData) {
-    const response = await authFetch(`${API_BASE_URL}/user/change-password?id=${id}`, {
+async function changePassword(passwordData) {
+    const response = await authFetch(`${API_BASE_URL}/user/change-password`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(passwordData)

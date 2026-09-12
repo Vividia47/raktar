@@ -244,10 +244,7 @@ document
         try {
             const user = getLoggedInUser();
 
-            await deleteGoods(
-                pendingDeleteProductId,
-                user.idU
-            );
+            await deleteGoods(pendingDeleteProductId);
 
             bootstrap.Modal.getInstance(
                 document.getElementById("delete-product-modal")
@@ -353,7 +350,7 @@ document
 
             const user = getLoggedInUser();
 
-            await addGoods(product, user.idU);
+            await addGoods(product);
 
 
             showNotification("Sikeres termékfelvétel!", "success");
@@ -589,15 +586,7 @@ document
 
 
 
-                await updateSellingPrice(
-
-                    productId,
-
-                    sprice,
-
-                    user.idU
-
-                );
+                await updateSellingPrice(productId, sprice);
 
 
 
@@ -630,6 +619,14 @@ document
 
                         document
                             .getElementById("edit-product-vat")
+                            .value
+
+                    ),
+
+                    sprice: Number(
+
+                        document
+                            .getElementById("edit-product-sprice")
                             .value
 
                     ),
@@ -674,15 +671,7 @@ document
 
 
 
-                await updateGoods(
-
-                    productId,
-
-                    product,
-
-                    user.idU
-
-                );
+                await updateGoods(productId, product);
 
 
             }

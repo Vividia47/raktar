@@ -48,18 +48,24 @@ namespace WarehouseAPI
                         ValidateIssuerSigningKey = true,
                         ValidIssuer = builder.Configuration["Jwt:Issuer"],
                         ValidAudience = builder.Configuration["Jwt:Audience"],
+                        NameClaimType = System.Security.Claims.ClaimTypes.Name,
+                        RoleClaimType = System.Security.Claims.ClaimTypes.Role,
                         IssuerSigningKey = new SymmetricSecurityKey(
                             Encoding.UTF8.GetBytes(jwtKey))
                     };
                 });
 
             builder.Services.AddAuthorization();
+            var frontendOrigins = builder.Configuration
+                .GetSection("Cors:Origins")
+                .Get<string[]>() ?? Array.Empty<string>();
+
             builder.Services.AddCors(options =>
             {
                 options.AddPolicy("Frontend", policy =>
                 {
                     policy
-                        .AllowAnyOrigin()
+                        .WithOrigins(frontendOrigins)
                         .AllowAnyHeader()
                         .AllowAnyMethod();
                 });
@@ -76,7 +82,11 @@ namespace WarehouseAPI
                 app.MapScalarApiReference();
             }
 
-            app.UseHttpsRedirection();
+            if (!app.Environment.IsDevelopment())
+            {
+                app.UseHttpsRedirection();
+            }
+
             app.UseCors("Frontend");
 
             app.UseAuthentication();

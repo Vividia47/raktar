@@ -2,11 +2,9 @@
 {
     public class MovementGoodsDto
     {
-        public int IdU { get; set; }
+        public decimal Lpprice { get; set; }
 
-        public float Lpprice { get; set; }
-
-        public float Sprice { get; set; }
+        public decimal Sprice { get; set; }
 
         public float Stock { get; set; }
 
