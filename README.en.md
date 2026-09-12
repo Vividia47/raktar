@@ -1,8 +1,8 @@
 [Magyar](README.md) | [English](README.en.md)
 
-# Warehouse Management
+# Warehouse Management System
 
-A web application for inventory management and warehouse operations. Developed as a group project and final project for a software development course.
+A web application for inventory management and warehouse process management. Final project / group project for a software development course.
 
 ## Technology Stack
 
@@ -15,145 +15,113 @@ A web application for inventory management and warehouse operations. Developed a
 ## Prerequisites
 
 * .NET SDK
-* A running MySQL server (WAMP or XAMPP can be used)
-* A modern web browser
+* Running MySQL server (WAMP/XAMPP can also be used)
+* Modern web browser
 
-The backend database connection can be changed in the configuration file.
+The backend database connection can be configured in the configuration file.
 
 ## Database
 
-The database dump is included in the repository.
+The database dump required for the project is included in the repository.
 
 To set up the database:
 
-1. Start the MySQL server, for example with WAMP or XAMPP.
-2. Open phpMyAdmin.
-3. Import the `Database/create.sql` database script.
-4. The script creates the `warehouse` database and the required tables.
-5. Check the database connection settings and update them if necessary for your MySQL installation.
+1. Open the phpMyAdmin interface.
+2. Import the `create.sql` database dump included in the repository.
+3. The dump automatically creates the `warehouse` database and the required tables.
+4. Check the database connection settings in the backend configuration file and modify them if necessary to match your local MySQL environment.
 
-The database intentionally contains no pre-populated users or products.
+The database intentionally does not contain any pre-populated users or products.
 
-If the database contains no users, the first user account can be created from the home page. The first account is always created with the Warehouse Manager role.
-
-### Database Creation and Schema
-
-For the demo, `Database/create.sql` is the authoritative database schema and should be imported. The application's `Database.EnsureCreated()` call is only a convenience fallback: it can create tables in an empty database, but it does not update or migrate an existing schema.
-
-If the schema changes later, update `create.sql` or run the appropriate SQL `ALTER TABLE` statements. The current demo database must contain the `users.PasswordHash` column for password-hash storage.
-
-Financial fields currently use `DECIMAL` types. If you are using an older database, run this once:
-
-```sql
-ALTER TABLE goods
-    MODIFY VAT DECIMAL(5,2),
-    MODIFY LPPrice DECIMAL(10,2),
-    MODIFY SPrice DECIMAL(10,2);
-
-ALTER TABLE history
-    MODIFY PPrice DECIMAL(10,2),
-    MODIFY SPrice DECIMAL(10,2);
-
-ALTER TABLE users
-    ADD CONSTRAINT UX_users_UserName UNIQUE (UserName);
-```
+If the database does not yet contain any users, the first user account can be created from the application's home page.
 
 ## Running the Application
 
-### 1. Start MySQL
+### 1. Starting MySQL
 
 Start the MySQL server using WAMP, XAMPP, or another MySQL environment.
 
-### 2. Start the Backend
+### 2. Starting the Backend
 
 From the project root directory:
 
 ```bash
 cd Backend\WarehouseAPI\WarehouseAPI
+
 dotnet run
 ```
 
-The backend uses the local Development HTTP address:
+After the backend starts, the API is available at the address displayed in the terminal.
 
-```text
-http://localhost:5282
-```
+### 3. Starting the Frontend
 
-The frontend communicates with the backend through this API.
+1. Open the project's `Frontend` folder in Visual Studio Code.
+2. Start the `index.html` file using **Live Server**.
 
-### 3. Start the Frontend
-
-Open the `Frontend` folder in VS Code and start `index.html` with Live Server. The default Live Server address is:
+The default Live Server address is:
 
 ```text
 http://localhost:5500/Frontend/index.html
 ```
 
-The `127.0.0.1` equivalent is also allowed:
+If Live Server uses the `127.0.0.1` address, this is also supported.
 
-```text
-http://127.0.0.1:5500/Frontend/index.html
-```
-
-This project is intended as a private local exam/demo application. The Development JWT key is included in the Development configuration, so the project can be started from a fresh repository clone without an additional secret setup.
+The frontend communicates with the server through the backend API.
 
 ## Login and Users
 
-If the database contains no users, the application allows the first user to be created from the home page. This first account is always assigned the Warehouse Manager role.
+The system uses JWT-based authentication.
 
-Further users can be created and managed by an authenticated Warehouse Manager.
+If the database does not yet contain any users, the first user account can be created from the application's home page.
 
-Login uses JWT-based authentication. Authenticated API requests send the JWT as a Bearer token.
+Subsequent users can be created and managed by users with the appropriate permissions.
 
 ## User Roles
 
 The application supports four user roles:
 
 * **Warehouse Manager** – full access to the application, including user management.
-* **Warehouse Worker** – product management and warehouse stock movement recording.
-* **Salesperson** – can view products and stock quantities and modify selling prices.
-* **Procurement Officer** – can view stock quantities and identify products that need reordering based on the minimum stock level.
+* **Warehouse Worker** – product management and recording warehouse stock movements.
+* **Salesperson** – viewing products and stock quantities, as well as modifying prices.
+* **Procurement Officer** – viewing stock quantities and checking products that require reordering based on the minimum stock level.
 
 ## Main Features
 
 * User login and JWT-based authentication
-* Role-based authorization
+* Role-based access control
 * Product and inventory management
-* Recording incoming and outgoing stock movements
-* Viewing stock movements by document number while recording a movement
-* Stock movement history
-* Management of selling and purchase prices
-* Minimum stock level monitoring and reorder warnings
-* Responsive Bootstrap-based user interface
-* Loading states, retry actions, notifications, and keyboard-accessible modal forms
+* Recording incoming and outgoing stock
+* Inventory movement tracking
+* Management of sales and purchase prices
+* Minimum stock level monitoring
+* Viewing warehouse history
+* Responsive, Bootstrap-based user interface
 
 ## Main Database Tables
 
-* **goods** – product and inventory data
-* **users** – users, password hashes, and roles
+* **goods** – product data
+* **users** – users and their permissions
 * **history** – warehouse stock movements and transactions
 
 ## API
 
-The backend provides a REST API for, among other things:
+The backend provides, among other things, the following functionality through a REST API:
 
 * user authentication
 * user management
 * product management
 * inventory management
-* stock movement recording
-* stock movement history
+* recording stock movements
+* retrieving history
 
-Endpoints requiring authentication use JWT Bearer tokens. The authenticated user's ID is read from the JWT claims rather than trusted from the frontend request.
+Endpoints requiring authentication use JWT Bearer tokens.
 
 ## Useful Development Tools
 
 * Visual Studio / Visual Studio Code
-* .NET SDK
 * MySQL
 * phpMyAdmin
-* WAMP or XAMPP
-* Live Server
+* WAMP
 * Postman
 * Git / GitHub
 
@@ -165,10 +133,10 @@ Backend and database development.
 
 **Tempfli Vivien**
 
-Frontend development, user interface, and authentication.
+Frontend development, user interface, authentication.
 
 ## Notes
 
-This project was developed for educational purposes as a group final project.
+The project was developed for educational purposes as a group final project.
 
-The application can be started with an empty database after importing `Database/create.sql`. After the first user is created, the system provides the functionality corresponding to that user's role.
+The development JWT key is included in the Development configuration, so the project can be run from a fresh repository clone without additional secret configuration.

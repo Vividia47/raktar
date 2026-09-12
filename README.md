@@ -26,37 +26,14 @@ A projekthez tartozó adatbázis-dump a repositoryban található.
 
 Az adatbázis használatához:
 
-1. Indítsa el a MySQL-kiszolgálót, például WAMP használatával.
-2. Nyissa meg a phpMyAdmin felületét.
-3. Importálja a repositoryban található `create.sql` adatbázis-dumpot.
-4. A dump automatikusan létrehozza a `warehouse` nevű adatbázist és a szükséges táblákat.
-5. Ellenőrizze a backend konfigurációs fájljában az adatbázis-kapcsolat adatait, és szükség esetén módosítsa azokat a saját MySQL-környezetéhez.
+1. Nyissa meg a phpMyAdmin felületét.
+2. Importálja a repositoryban található `create.sql` adatbázis-dumpot.
+3. A dump automatikusan létrehozza a `warehouse` nevű adatbázist és a szükséges táblákat.
+4. Ellenőrizze a backend konfigurációs fájljában az adatbázis-kapcsolat adatait, és szükség esetén módosítsa azokat a saját MySQL-környezetéhez.
 
 Az adatbázis szándékosan nem tartalmaz előre feltöltött felhasználókat vagy termékeket.
 
 Ha az adatbázis még nem tartalmaz felhasználót, az első felhasználói fiók a kezdőoldalon hozható létre.
-
-### Adatbázis-létrehozás és séma
-
-A demo használatához a `Database/create.sql` a hivatalos adatbázis-séma és ezt kell importálni. Az alkalmazásban található `Database.EnsureCreated()` csak kényelmi tartalék: üres adatbázis esetén megpróbálja létrehozni a táblákat, de egy már létező adatbázis sémáját nem frissíti és nem hajt végre módosításokat.
-
-Ha a sémában később változás történik, a `create.sql` fájlt vagy a megfelelő SQL `ALTER TABLE` parancsokat kell használni. A jelenlegi demo-adatbázisban a `users.PasswordHash` oszlopnak kell szerepelnie a jelszóhash-ek tárolásához.
-
-A jelenlegi adatbázisban a pénzügyi mezők `DECIMAL` típusúak. Ha egy korábbi adatbázist használ, futtassa le egyszer:
-
-```sql
-ALTER TABLE goods
-	MODIFY VAT DECIMAL(5,2),
-	MODIFY LPPrice DECIMAL(10,2),
-	MODIFY SPrice DECIMAL(10,2);
-
-ALTER TABLE history
-	MODIFY PPrice DECIMAL(10,2),
-	MODIFY SPrice DECIMAL(10,2);
-
-ALTER TABLE users
-	ADD CONSTRAINT UX_users_UserName UNIQUE (UserName);
-```
 
 ## Indítás
 
@@ -70,32 +47,34 @@ A projekt főkönyvtárából:
 
 ```bash
 cd Backend\WarehouseAPI\WarehouseAPI
+
 dotnet run
 ```
 
-A backend indítása után az alkalmazás a terminálban megjelenő címen érhető el.
-
-A frontend a backend API-ján keresztül kommunikál a szerverrel.
+A backend indítása után az API a terminálban megjelenő címen érhető el.
 
 ### 3. Frontend indítása
 
-Nyissa meg a `Frontend` mappát VS Code-ban, majd indítsa el az `index.html` fájlt Live Serverrel. A Live Server alapértelmezett címe:
+1. Nyissa meg a projekt `Frontend` mappáját Visual Studio Code-ban.
+2. Indítsa el az `index.html` fájlt **Live Server** segítségével.
+
+A Live Server alapértelmezett címe:
 
 ```text
 http://localhost:5500/Frontend/index.html
 ```
 
-Ha a Live Server a `127.0.0.1` címet használja, az is engedélyezve van.
+Ha a Live Server a `127.0.0.1` címet használja, az is megfelelő.
 
-A projekt helyi vizsgaremek/demo célra készült. A fejlesztői JWT-kulcs a Development konfigurációban található, ezért a tanár egy friss repository-klónból külön titokbeállítás nélkül is el tudja indítani.
+A frontend a backend API-ján keresztül kommunikál a szerverrel.
 
 ## Belépés és felhasználók
 
-Ha az adatbázis még nem tartalmaz felhasználót, az alkalmazás lehetőséget biztosít az első felhasználó létrehozására.
+A rendszer JWT alapú hitelesítést használ.
+
+Ha az adatbázis még nem tartalmaz felhasználót, az első felhasználói fiók a kezdőoldalon hozható létre.
 
 A későbbi felhasználók létrehozását és kezelését a megfelelő jogosultsággal rendelkező felhasználó végezheti.
-
-A bejelentkezés JWT alapú hitelesítést használ.
 
 ## Jogosultsági körök
 
@@ -160,4 +139,4 @@ Frontend fejlesztés, felhasználói felület, hitelesítés.
 
 A projekt oktatási célból, csoportos vizsgaremekként készült.
 
-Az alkalmazás üres adatbázissal is elindítható. Az első felhasználó létrehozása után a rendszer a felhasználó szerepkörének megfelelő funkciókat biztosít.
+A fejlesztői JWT-kulcs a Development konfigurációban található, ezért a projekt egy friss repository-klónból külön titokbeállítás nélkül is elindítható.
